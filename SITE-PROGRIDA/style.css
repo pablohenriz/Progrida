@@ -3,6 +3,7 @@
 :root {
     --black: #161616;
     --verde-main: #4EC0A8;
+    --verde-escuro: #2FB396;
     --azul-escuro: #1D4172;
     --cinza: #333333;
     --cinza-claro: #4e4e4e;
@@ -17,17 +18,29 @@
     border: none;
     outline: none;
     text-decoration: none;
+    font-family: "Montserrat", sans-serif;
+}
+
+p {
+    font-weight: 600;
+}
+
+a {
+    font-weight: 550;
 }
 
 body {
-  font-family: "Montserrat", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: weight;
-  font-style: normal;
-  margin-left: 40px;
-  margin-right: 40px;
+    font-family: "Montserrat", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: weight;
+    font-style: normal;
+    margin-left: 40px;
+    margin-right: 40px;
 }
 
+button {
+    cursor:pointer;
+}
 /*=====Header==========*/
 
 header {
@@ -37,7 +50,7 @@ header {
     margin-top: 20px;
 }
 
-.logo-header a{
+.logo-header a {
     display: flex;
     justify-content: center;
     color: var(--black);
@@ -45,21 +58,19 @@ header {
 
 .logo-header .link-header p {
     font-size: 20px;
-    font-weight: 600;
 }
 
-.opcoes-header  a {
-    font-weight: 550;
+.opcoes-header a {
     margin-right: 20px;
     color: var(--cinza-claro);
 }
 
-.opcoes-header  a:hover {
+.opcoes-header a:hover {
     border-bottom: 2px solid var(--cinza-claro);
 }
 
 .btn {
-    color:var(--branco);
+    color: var(--branco);
     background-color: var(--verde-main);
     border-radius: 10px;
     padding: 10px 30px;
@@ -85,12 +96,13 @@ header {
     margin-bottom: 1px;
 }
 
-.main-container .main-conteudo p{
+.main-container .main-conteudo p {
     width: 700px;
     margin-left: auto;
     margin-right: auto;
     color: var(--cinza-claro);
     font-weight: 500;
+    margin-bottom: 40px;
 }
 
 .btn-download {
@@ -117,10 +129,162 @@ header {
 .img-main {
     display: flex;
     justify-content: center;
-    margin-top: 40px;
+    margin-top: 70px;
 }
 
 .img-main img {
     width: 900px;
     height: auto;
+    border-radius: 20px;
+}
+
+/*======ferramentas=======*/
+.ferramentas-section {
+    margin-top: 200px;
+}
+
+.ferramentas-section .ferra-conteudo {
+    text-align: center;
+}
+
+.ferramentas-section .ferra-conteudo h1 {
+    font-size: 50px;
+}
+
+.ferramentas-section .ferra-conteudo p {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--cinza-claro);
+}
+
+/*====caixas de ferramentas=====*/
+.caixas-ferramentas {
+    display: flex;
+    justify-content: center;
+}
+
+.caixa-fer {
+    width: 300px;
+    margin-right: 50px;
+}
+
+.caixa-fer h2 {
+    margin-bottom: 1px;
+    font-weight: 650;
+}
+
+.caixa-fer p {
+    color: var(--cinza-claro);
+}
+
+.caixa-fer img {
+    border-radius: 15px;
+    width: 60px;
+    height: 60px;
+}
+
+/*==========Imagens demonstrativas da funcionalidade do site (img-function-section)========*/
+.img-function-section {
+    text-align: center;
+    margin-top: 170px;
+}
+
+.img-function-section h1 {
+    font-size: 50px;
+}
+
+.img-groups-function {
+    display: flex;
+    justify-content: center;
+}
+
+.img-groups-function .img-box img {
+    width: 300px;
+    border-radius: 20px;
+    margin-right: 30px;
+    height: 300px;
+}
+
+/*========== Download Section =======*/
+.download-section {
+    background-color: var(--verde-main);
+    color: var(--branco);
+    width: 100%;
+    text-align: center;
+    border-radius: 20px;
+    padding: 20px 0px 50px 0px;
+    margin-top: 100px;
+}
+
+.download-section h1 {
+    font-size: 50px;
+    width: 950px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.download-section p {
+    width: 700px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.btn-download-3 {
+    background-color: var(--branco);
+    color: var(--cinza);
+    padding: 17px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    margin-right: 20px;
+    margin-top: 15px;
+}
+
+/*==================Novidades Container=========*/
+.novidades-container {
+    text-align: center;
+    margin-top: 90px;
+}
+
+.novidades-container h1 {
+    font-size: 40px;
+    margin-bottom: 1px;
+}
+
+.novidades-container p {
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--cinza-claro);
+}
+
+.novidades-container input {
+    border: 1px solid var(--branco-mais-escuro);
+    padding: 10px 50px 10px 10px;
+    border-radius: 10px;
+    font-weight: 600;
+    margin-right: 20px;
+}
+
+.linha {
+    width: 100%;
+    border-bottom: 1px solid var(--branco-mais-escuro);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    color: var(--cinza--mais-claro);
+}
+
+.box-footer a {
+    color: var(--cinza--mais-claro);
+    margin-right: 13px;
 }
