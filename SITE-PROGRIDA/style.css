@@ -13,12 +13,13 @@
 }
 
 * {
-    margin: none;
-    padding: none;
+    margin: 0;
+    padding: 0;
     border: none;
     outline: none;
     text-decoration: none;
     font-family: "Montserrat", sans-serif;
+    box-sizing: border-box;
 }
 
 p {
@@ -39,21 +40,30 @@ body {
 }
 
 button {
-    cursor:pointer;
+    cursor: pointer;
 }
-/*=====Header==========*/
 
+/*=====Header==========*/
 header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 20px;
+    margin-bottom: 100px;
+}
+
+.menu-header {
+    display: none;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
 }
 
 .logo-header a {
     display: flex;
     justify-content: center;
     color: var(--black);
+    align-items: center;
 }
 
 .logo-header .link-header p {
@@ -78,7 +88,10 @@ header {
     font-weight: 550;
 }
 
-/*=====main==========*/
+.btn:hover  {
+    background-color: var(--verde-escuro);
+}
+/*=====Main==========*/
 .main-container {
     display: flex;
     width: 100%;
@@ -88,16 +101,18 @@ header {
 
 .main-container .main-conteudo {
     width: 990px;
+    max-width: 100%;
     text-align: center;
 }
 
 .main-container .main-conteudo h1 {
     font-size: 70px;
-    margin-bottom: 1px;
+    margin-bottom: 20px;
 }
 
 .main-container .main-conteudo p {
     width: 700px;
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
     color: var(--cinza-claro);
@@ -115,6 +130,11 @@ header {
     margin-right: 20px;
 }
 
+.btn-download:hover{
+    background-color: var(--verde-main);
+    transform: scale(1.05);
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
 .btn-download-2 {
     background-color: var(--branco);
     color: var(--cinza);
@@ -126,6 +146,13 @@ header {
     border: 0.5px solid var(--branco-mais-escuro);
 }
 
+
+.btn-download-2:hover {
+    background-color: var(--branco);
+    transform: scale(1.05);
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
 .img-main {
     display: flex;
     justify-content: center;
@@ -134,11 +161,12 @@ header {
 
 .img-main img {
     width: 900px;
+    max-width: 100%;
     height: auto;
     border-radius: 20px;
 }
 
-/*======ferramentas=======*/
+/*======Ferramentas=======*/
 .ferramentas-section {
     margin-top: 200px;
 }
@@ -149,29 +177,35 @@ header {
 
 .ferramentas-section .ferra-conteudo h1 {
     font-size: 50px;
+    margin-bottom: 20px;
 }
 
 .ferramentas-section .ferra-conteudo p {
     width: 800px;
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
     color: var(--cinza-claro);
 }
 
-/*====caixas de ferramentas=====*/
+/*====Caixas de ferramentas=====*/
 .caixas-ferramentas {
     display: flex;
     justify-content: center;
+    margin-top: 50px;
+    flex-wrap: wrap;
+    gap: 30px;
 }
 
 .caixa-fer {
     width: 300px;
-    margin-right: 50px;
+    max-width: 100%;
 }
 
 .caixa-fer h2 {
-    margin-bottom: 1px;
+    margin-bottom: 10px;
     font-weight: 650;
+    margin-top: 20px;
 }
 
 .caixa-fer p {
@@ -184,7 +218,7 @@ header {
     height: 60px;
 }
 
-/*==========Imagens demonstrativas da funcionalidade do site (img-function-section)========*/
+/*==========Imagens demonstrativas========*/
 .img-function-section {
     text-align: center;
     margin-top: 170px;
@@ -192,18 +226,22 @@ header {
 
 .img-function-section h1 {
     font-size: 50px;
+    margin-bottom: 40px;
 }
 
 .img-groups-function {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
 }
 
 .img-groups-function .img-box img {
     width: 300px;
+    max-width: 100%;
     border-radius: 20px;
-    margin-right: 30px;
     height: 300px;
+    object-fit: cover;
 }
 
 /*========== Download Section =======*/
@@ -213,21 +251,25 @@ header {
     width: 100%;
     text-align: center;
     border-radius: 20px;
-    padding: 20px 0px 50px 0px;
+    padding: 20px 20px 50px 20px;
     margin-top: 100px;
 }
 
 .download-section h1 {
     font-size: 50px;
     width: 950px;
+    max-width: 100%;
     margin-right: auto;
     margin-left: auto;
+    margin-bottom: 10px;
 }
 
 .download-section p {
     width: 700px;
+    max-width: 100%;
     margin-right: auto;
     margin-left: auto;
+    margin-bottom: 20px;
 }
 
 .btn-download-3 {
@@ -241,6 +283,12 @@ header {
     margin-top: 15px;
 }
 
+.btn-download-3:hover  {
+    background-color: var(--branco);
+    transform: scale(1.05);
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
 /*==================Novidades Container=========*/
 .novidades-container {
     text-align: center;
@@ -249,22 +297,25 @@ header {
 
 .novidades-container h1 {
     font-size: 40px;
-    margin-bottom: 1px;
+    margin-bottom: 20px;
 }
 
 .novidades-container p {
     width: 600px;
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
     color: var(--cinza-claro);
+    margin-bottom: 30px;
 }
 
 .novidades-container input {
     border: 1px solid var(--branco-mais-escuro);
-    padding: 10px 50px 10px 10px;
+    padding: 10px 90px 10px 10px;
     border-radius: 10px;
     font-weight: 600;
     margin-right: 20px;
+    max-width: 100%;
 }
 
 .linha {
@@ -273,6 +324,7 @@ header {
     margin-left: auto;
     margin-right: auto;
     margin-top: 50px;
+    margin-bottom: 20px;
 }
 
 footer {
@@ -282,9 +334,335 @@ footer {
     padding-top: 10px;
     padding-bottom: 20px;
     color: var(--cinza--mais-claro);
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .box-footer a {
     color: var(--cinza--mais-claro);
     margin-right: 13px;
+}
+
+/*=====RESPONSIVIDADE==========*/
+
+/* Tablets e telas médias */
+@media (max-width: 1024px) {
+    header {
+        margin-bottom: 50px;
+    }
+
+    body {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .main-container .main-conteudo h1 {
+        font-size: 55px;
+    }
+
+    .ferramentas-section .ferra-conteudo h1,
+    .img-function-section h1,
+    .download-section h1 {
+        font-size: 40px;
+    }
+
+    .caixas-ferramentas {
+        gap: 20px;
+    }
+
+    .caixa-fer {
+        width: 45%;
+    }
+
+    .img-groups-function .img-box img {
+        width: 250px;
+        height: 250px;
+    }
+
+    .menu-header {
+        display: block;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+    }
+
+    .caixa-fer p {
+        width: 300px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+/* Tablets pequenos */
+@media (max-width: 768px) {
+    header {
+        margin-bottom: 50px;
+    }
+
+    body {
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .opcoes-header {
+        display: none;
+    }
+
+    .main-container .main-conteudo h1 {
+        font-size: 45px;
+        margin-bottom: 30px;
+    }
+
+    .main-container .main-conteudo p {
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    .btn-download,
+    .btn-download-2 {
+        margin-bottom: 10px;
+        margin-right: 10px;
+    }
+
+    .ferramentas-section {
+        margin-top: 120px;
+    }
+
+    .ferramentas-section .ferra-conteudo h1,
+    .img-function-section h1 {
+        font-size: 35px;
+        margin-bottom: 30px;
+    }
+
+    .ferramentas-section .ferra-conteudo p {
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    .caixa-fer {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .img-function-section {
+        margin-top: 100px;
+    }
+
+    .img-groups-function .img-box img {
+        width: 200px;
+        height: 200px;
+    }
+
+    .download-section h1 {
+        font-size: 35px;
+        width: 100%;
+        padding: 0 10px;
+        margin-bottom: 30px;
+    }
+
+    .download-section p {
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    .novidades-container h1 {
+        font-size: 32px;
+        margin-bottom: 30px;
+    }
+
+    .novidades-container p {
+        width: 100%;
+        padding: 0 10px;
+    }
+
+    footer {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .box-footer {
+        margin-bottom: 10px;
+    }
+
+    .menu-header {
+        display: block;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+    }
+
+    .caixa-fer p {
+        width: 300px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+/* Smartphones */
+@media (max-width: 430px) {
+    body {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    header {
+        width: 100%;
+        margin-bottom: 50px;
+    }
+
+    .logo-header .link-header p {
+        font-size: 18px;
+    }
+
+    .opcoes-header {
+        display: none;
+    }
+
+    .main-container {
+        width: 100%;
+    }
+
+    .main-container .main-conteudo h1 {
+        font-size: 35px;
+        line-height: 1.2;
+        margin-bottom: 30px;
+    }
+
+    .main-container .main-conteudo p {
+        font-size: 14px;
+    }
+
+    .btn-download,
+    .btn-download-2 {
+        display: block;
+        width: 70%;
+        margin-right: auto;
+        margin-bottom: 15px;
+        text-align: center;
+        margin-left: auto;
+    }
+
+    .img-main {
+        margin-top: 40px;
+    }
+
+    .img-main img {
+        width: 100%;
+        height: auto;
+    }
+
+    .ferramentas-section {
+        margin-top: 80px;
+        margin-bottom: 50px;
+    }
+
+    .ferramentas-section .ferra-conteudo h1 {
+        font-size: 28px;
+        margin-bottom: 30px;
+    }
+
+    .ferramentas-section .ferra-conteudo p {
+        font-size: 14px;
+    }
+
+    .caixas-ferramentas {
+        margin-top: 30px;
+    }
+
+    .caixa-fer {
+        width: 100%;
+        text-align: center;
+    }
+
+    .caixa-fer p {
+        width: 300px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .img-function-section {
+        margin-top: 80px;
+    }
+
+    .img-function-section h1 {
+        font-size: 28px;
+        margin-bottom: 30px;
+    }
+
+    .img-groups-function {
+        gap: 20px;
+    }
+
+    #box-3 {
+        display: none;
+
+    }
+
+    .img-groups-function .img-box img {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        margin-right: 0;
+    }
+
+    .download-section {
+        margin-top: 60px;
+        padding: 30px 15px;
+    }
+
+    .download-section h1 {
+        font-size: 28px;
+    }
+
+    .download-section p {
+        font-size: 14px;
+    }
+
+    .btn-download-3 {
+        display: block;
+        width: 80%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .novidades-container {
+        margin-top: 60px;
+    }
+
+    .novidades-container h1 {
+        font-size: 26px;
+    }
+
+    .novidades-container p {
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .novidades-container input {
+        width: 80%;
+        margin-right: 0;
+        margin-bottom: 15px;
+        padding: 10px;
+    }
+
+    .btn {
+        width: 80%;
+        text-align: center;
+    }
+
+    footer {
+        font-size: 12px;
+    }
+
+    .box-footer a {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .menu-header {
+        display: block;
+        width: 50px;
+        height: 50px;
+        cursor: pointer;
+    }
 }
