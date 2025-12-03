@@ -19,6 +19,9 @@
     border: 0;
     border-radius: 0;
     outline: none;
+    font-weight: 700;
+    word-spacing: 3px;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -26,6 +29,9 @@ body {
     background-color: #fcfcff;
     margin: 0;
     padding: 0;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 /*CONTEUDOS DAS TAREFAS-MAIN--PADRÃO*/
@@ -37,10 +43,15 @@ body {
 .main .main-title {
     display:flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .main .main-title h1{
-    font-size: 40px;
+    font-size: 50px;
+}
+
+.main .main-title .separador-1 {
+    display: flex;
 }
 
 .main .main-title .separador-1 a {
@@ -63,4 +74,16 @@ body {
 .btn-add img {
     width: 17px;
     height: 17px;
+}
+
+.barra {
+    width: 100%;
+    border: 1px solid var(--branco-mais-escuro);
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+
+.conteudo-main {
+    
 }
