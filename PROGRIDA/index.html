@@ -1,37 +1,86 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/PROGRIDA/CSS/style.css">
-    <link rel="shortcut icon" href="/icons/favicon.ico" type="image/x-icon">
-    <title>Progrida / App</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Tarefas</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-    <section class="main">
-        <div class="main-title">
-            <h1>Hoje</h1>
-            <div class="separador-1">
-                <a href=""><img src="/icons/16.png" alt=""></a>
-                <button class="btn-add"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAANUlEQVR4nGNgGFHgPxSMWoAT/B+1gBD4P7It+E9lwEB3C4gB/ynRPGoBVcD/UQuGvwWDEgAAM4cu4K+FPb8AAAAASUVORK5CYII=" alt="plus"> Adicionar Tarefa</button>
-            </div>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="profile">
+        <div class="avatar">P</div>
+        <div>
+          <p class="email">pedrim@gmail.com</p>
+          <button class="text-btn" id="toggleSidebarBtn" type="button">Ocultar</button>
         </div>
-        <div class="barra"></div>
-        <div class="conteudo-main">
-            <h1>Tarefas de Hoje</h1>
-            <div class="caixa-tarefas">
-                <input type="checkbox">
-                <div class="interior-1">
-                    <h4>Tarafas</h4>
-                    <div class="interior-2">
-                    </div>
-                </div>
-                <p>Hoje</p>
-            </div>
-        </div>
-    </section>
-</body>
+      </div>
 
+      <label class="search-wrap" for="searchInput">
+        <span>🔎</span>
+        <input id="searchInput" type="text" placeholder="Buscar" />
+      </label>
+
+      <nav class="menu" id="menuLists">
+        <button class="menu-item active" data-list="today" type="button">Meu Dia</button>
+        <button class="menu-item" data-list="soon" type="button">Em breve</button>
+        <button class="menu-item" data-list="important" type="button">Importante</button>
+        <button class="menu-item" data-list="completed" type="button">Concluidas</button>
+        <button class="menu-item" data-list="all" type="button">Tarefas</button>
+      </nav>
+
+      <div class="divider"></div>
+
+      <button id="addTaskSidebar" class="add-link" type="button">+ Adicionar tarefa</button>
+    </aside>
+
+    <main class="main">
+      <header class="main-top">
+        <button class="mobile-menu" id="openSidebarBtn" type="button">☰</button>
+        <div>
+          <p class="breadcrumb" id="breadcrumb">Meu Dia</p>
+          <h1 id="listTitle">Meu Dia</h1>
+          <p class="today-date" id="todayDate"></p>
+        </div>
+      </header>
+
+      <section class="quick-add">
+        <input id="newTaskInput" type="text" placeholder="Adicionar uma tarefa" />
+        <input id="newTaskDate" type="date" />
+        <button id="newTaskBtn" type="button">Adicionar</button>
+      </section>
+
+      <section id="tasksContainer" class="tasks"></section>
+    </main>
+
+    <aside class="details" id="detailsPane">
+      <h2>Detalhes</h2>
+      <p class="muted" id="emptyDetails">Selecione uma tarefa para editar.</p>
+
+      <form id="detailsForm" class="details-form hidden">
+        <label for="detailTitle">Titulo</label>
+        <input id="detailTitle" name="title" type="text" required />
+
+        <label for="detailDate">Data</label>
+        <input id="detailDate" name="dueDate" type="date" />
+
+        <label for="detailNotes">Observacoes</label>
+        <textarea id="detailNotes" name="notes" placeholder="Anote os detalhes..."></textarea>
+
+        <label class="check-line" for="detailImportant">
+          <input id="detailImportant" name="important" type="checkbox" />
+          Marcar como importante
+        </label>
+
+        <div class="details-actions">
+          <button type="submit">Salvar</button>
+          <button id="deleteTaskBtn" type="button" class="danger">Excluir</button>
+        </div>
+      </form>
+    </aside>
+  </div>
+
+  <script src="app.js"></script>
+</body>
 </html>
