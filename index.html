@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Task UI</title>
+<style>
+*{
+  box-sizing:border-box;
+  font-family:Segoe UI, Roboto, sans-serif;
+}
+
+body{
+  background:#111;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.card{
+  width:820px;
+  background:#18181a;
+  border:1px solid #2a2a2d;
+  border-radius:10px;
+  padding:18px 20px 14px;
+  color:#ccc;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.title{
+  font-size:15px;
+  color:#aaa;
+}
+
+.desc{
+  font-size:13px;
+  color:#777;
+  margin-top:6px;
+}
+
+.wave{
+  width:26px;
+  height:18px;
+  border-radius:4px;
+  border:1px solid #333;
+}
+
+.controls{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+}
+
+.btn{
+  background:#1f1f22;
+  border:1px solid #333;
+  color:#ccc;
+  padding:6px 12px;
+  font-size:13px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.btn:hover{
+  background:#26262a;
+}
+
+.row-bottom{
+  margin-top:18px;
+  padding-top:12px;
+  border-top:1px solid #2a2a2d;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.tag{
+  font-size:13px;
+  color:#bbb;
+}
+
+.tag span{
+  color:#ff4d4d;
+  margin-right:6px;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+}
+
+.cancel{
+  background:#2b2b2e;
+  border:none;
+  color:#ddd;
+  padding:7px 14px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.add{
+  background:#6b2c2c;
+  border:none;
+  color:#fff;
+  padding:7px 14px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.add:hover{
+  background:#7c3434;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="top">
+    <div>
+      <div class="title">Nome da tarefa</div>
+      <div class="desc">Descrição</div>
+    </div>
+    <div class="wave"></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn">📅 Data</button>
+    <button class="btn">🏳 Prioridade</button>
+    <button class="btn">⏰ Lembretes</button>
+    <button class="btn">•••</button>
+  </div>
+
+  <div class="row-bottom">
+    <div class="tag"><span>#</span> semana ▼</div>
+    <div class="actions">
+      <button class="cancel">Cancelar</button>
+      <button class="add">Adicionar tarefa</button>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -135,6 +135,8 @@ body {
 
 .main {
   padding: 22px;
+  padding-top: 80px;
+  padding-left: 60px;
 }
 
 .main-top {
@@ -155,6 +157,7 @@ body {
 .breadcrumb {
   margin: 0;
   color: var(--muted);
+  display: none;
 }
 
 h1 {
@@ -167,36 +170,247 @@ h1 {
   font-size: 0.9rem;
 }
 
+/*Sessão para adicionar tarefa*/
+
 .quick-add {
   margin-top: 18px;
-  background: #5c5c5f;
+  background: #262525;
+  background: none;
   border-radius: 10px;
   padding: 8px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 165px 120px;
-  gap: 8px;
 }
 
-.quick-add input,
-.quick-add button,
-.details input,
-.details textarea,
-.details button {
-  border-radius: 8px;
-  border: 1px solid #666;
-  padding: 10px;
-  font: inherit;
+.add-taks {
+  display: flex;
+  align-items: center;
+  color: var(--line);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color 0.3s;
+  padding: 10px 0;
+}
+
+.add-taks span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  font-size: 1.5rem;
+  margin-right: 10px;
+  margin-left: 10px;
+  color: var(--accent);
+  user-select: none;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.add-taks:hover {
+  color: var(--accent);
+}
+
+.add-taks:hover span {
+  background-color: var(--accent);
+  color: var(--text);
+}
+
+.add-section-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 15px 0;
+  cursor: pointer;
+  margin-top: 10px;
+  
+  /* Começa invisível */
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+
+
+
+.card{
+  width:100%;
+  max-width:820px;
+  margin:auto;
+  background:#18181a;
+  border:1px solid #2a2a2d;
+  border-radius:clamp(8px,1vw,12px);
+  padding:clamp(14px,2vw,22px);
+  color:#ccc;
+}
+
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  flex-wrap:wrap;
+}
+
+.quick-add .card .top input{
+  width:100%;
+  background:transparent;
+  border:none;
+  color:#ccc;
+  font-size:15px;
+  outline:none;
+  pointer-events:auto;
+  position:relative;
+  z-index:2;
+}
+
+.title-desc{
+  width: 100%;
+}
+
+.task-input{
+  width:100%;
+  max-width:750px;
+  background:transparent;
+  border:none;
+  outline:none;
+  color:#ddd;
+  font-size:clamp(14px, 1.2vw, 16px);
+  resize:none;
+  overflow:hidden;
+  caret-color:#fff;
+  font-family:inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+#title{
+  font-size:15px;
+  color:#aaa;
+  background: transparent;
+  border: none;
+
+}
+
+#desc{
+  font-size:13px;
+  color:#777;
+  margin-top:6px;
+}
+
+.wave{
+  width:26px;
+  height:18px;
+  border-radius:4px;
+  border:1px solid #333;
+}
+
+.controls{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.btn-Control{
+  background:var(--text-darke);
+  border:1px solid #333;
+  color:var(--bg-light);
+  padding:6px 12px;
+  font-size:13px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.btn-Control:hover{
+  background:#26262a;
+}
+
+.row-bottom{
+  margin-top:18px;
+  padding-top:12px;
+  border-top:1px solid #2a2a2d;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.tag{
+  font-size:13px;
+  color:#bbb;
+}
+
+.tag span{
+  color:#ff4d4d;
+  margin-right:6px;
+}
+
+.actions{
+  display:flex;
+  gap:10px;
+}
+
+.cancel{
+  background:#333336;
+  border:none;
+  color:#ddd;
+  padding:7px 14px;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.add{
+  background:#88ccc4;
+  border:none;
+  color:#fff;
+  padding:7px 14px;
+  border-radius:6px;
+  cursor:not-allowed;
+}
+
+.cancel:hover{
+  background:var(--line);
+}
+
+
+@media (max-width:600px){
+
+  .actions{
+    width:100%;
+    justify-content:flex-end;
+  }
+
+  .tag{
+    width:100%;
+  }
+
+}
+
+/* Quando o mouse passa por cima, o conjunto todo aparece */
+.add-section-wrapper:hover {
+  opacity: 1;
+}
+
+.line {
+  flex-grow: 1;
+  height: 1px;
+  background-color: var(--accent);
+}
+
+.text {
+  color: var(--accent);
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Efeito extra: o texto pode mudar de cor ou brilhar levemente no hover direto */
+.add-section-wrapper:hover .text {
+  filter: brightness(1.2);
 }
 
 .quick-add input {
   background: #ececec;
   color: #222;
-}
-
-.quick-add button {
-  background: var(--accent);
-  border-color: var(--accent);
-  cursor: pointer;
 }
 
 .tasks {
@@ -263,10 +477,12 @@ h1 {
   font-size: 1.05rem;
 }
 
+/*     Detalhes     */
 .details {
   border-left: 1px solid #3c3c40;
   background: rgba(0, 0, 0, 0.15);
   padding: 20px;
+  display: none; /*=============================================*/
 }
 
 .details h2 {

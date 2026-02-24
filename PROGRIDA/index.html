@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sistema de Tarefas</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <div class="app">
     <aside class="sidebar" id="sidebar">
@@ -18,7 +20,6 @@
       </div>
 
       <label class="search-wrap" for="searchInput">
-        <span>🔎</span>
         <input id="searchInput" type="text" placeholder="Buscar" />
       </label>
 
@@ -46,9 +47,45 @@
       </header>
 
       <section class="quick-add">
-        <input id="newTaskInput" type="text" placeholder="Adicionar uma tarefa" />
+        <!-- <input id="newTaskInput" type="text" placeholder="Adicionar uma tarefa" />
         <input id="newTaskDate" type="date" />
-        <button id="newTaskBtn" type="button">Adicionar</button>
+        <button id="newTaskBtn" type="button">Adicionar</button> -->
+
+        <div class="card">
+
+          <div class="top">
+            <div class="title-desc">
+              <textarea id="title" class="task-input" placeholder="Nome da tarefa"></textarea>
+              <textarea id="desc" class="task-input" placeholder="Descrição"></textarea>
+            </div>
+          </div>
+
+          <div class="controls">
+            <button class="btn-Control">📅 Data</button>
+            <button class="btn-Control">🏳 Prioridade</button>
+            <button class="btn-Control">⏰ Lembretes</button>
+            <button class="btn-Control">•••</button>
+          </div>
+
+          <div class="row-bottom">
+            <div class="tag"><span>#</span> semana ▼</div>
+            <div class="actions">
+              <button class="cancel">Cancelar</button>
+              <button class="add">Adicionar tarefa</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <ul id="taskList">
+
+          </ul>
+        </div>
+        <a class="add-taks" onclick="addTask()"><span>+</span> Adicionar tarefa</a>
+        <div class="add-section-wrapper" onclick="addSection()">
+          <div class="line"></div>
+          <span class="text">Adicionar seção</span>
+          <div class="line"></div>
+        </div>
       </section>
 
       <section id="tasksContainer" class="tasks"></section>
@@ -83,4 +120,5 @@
 
   <script src="app.js"></script>
 </body>
+
 </html>
