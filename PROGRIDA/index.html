@@ -37,56 +37,68 @@
     </aside>
 
     <main class="main">
-      <header class="main-top">
-        <button class="mobile-menu" id="openSidebarBtn" type="button">☰</button>
-        <div>
-          <p class="breadcrumb" id="breadcrumb">Meu Dia</p>
-          <h1 id="listTitle">Meu Dia</h1>
-          <p class="today-date" id="todayDate"></p>
-        </div>
-      </header>
+      <div class="container-grop">
+        <header class="main-top">
+          <button class="mobile-menu" id="openSidebarBtn" type="button">☰</button>
+          <div class="day-title">
+            <p class="breadcrumb" id="breadcrumb">Meu Dia</p>
+            <h1 id="listTitle">Meu Dia</h1>
+            <p class="today-date" id="todayDate"></p>
+          </div>
+        </header>
 
-      <section class="quick-add">
-        <!-- <input id="newTaskInput" type="text" placeholder="Adicionar uma tarefa" />
+        <section class="quick-add">
+          <!-- <input id="newTaskInput" type="text" placeholder="Adicionar uma tarefa" />
         <input id="newTaskDate" type="date" />
-        <button id="newTaskBtn" type="button">Adicionar</button> -->
-
-        <div class="card">
-
-          <div class="top">
-            <div class="title-desc">
-              <textarea id="title" class="task-input" placeholder="Nome da tarefa"></textarea>
-              <textarea id="desc" class="task-input" placeholder="Descrição"></textarea>
+        <button id="newTaskBtn" type= "button">Adicionar</button> -->
+          
+          <div class="task">
+            <div class="task-left">
+              <input type="checkbox" class="circle-check"></input>
+            </div>
+            <div class="task-content">
+              <p class="task-title">Tarefa </p>
+              <p class="task-meta">desc</p>
+            </div>
+            <div class="taks-itens">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="m499-287 335-335-52-52-335 335 52 52Zm-261 87q-100-5-149-42T40-349q0-65 53.5-105.5T242-503q39-3 58.5-12.5T320-542q0-26-29.5-39T193-600l7-80q103 8 151.5 41.5T400-542q0 53-38.5 83T248-423q-64 5-96 23.5T120-349q0 35 28 50.5t94 18.5l-4 80Zm280 7L353-358l382-382q20-20 47.5-20t47.5 20l70 70q20 20 20 47.5T900-575L518-193Zm-159 33q-17 4-30-9t-9-30l33-159 165 165-159 33Z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M509-269q-29-29-29-71t29-71q29-29 71-29t71 29q29 29 29 71t-29 71q-29 29-71 29t-71-29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="M880-80 720-240H160q-33 0-56.5-23.5T80-320v-480q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v720ZM160-320h594l46 45v-525H160v480Zm0 0v-480 480Z"/></svg>
             </div>
           </div>
 
-          <div class="controls">
-            <button class="btn-Control">📅 Data</button>
-            <button class="btn-Control">🏳 Prioridade</button>
-            <button class="btn-Control">⏰ Lembretes</button>
-            <button class="btn-Control">•••</button>
-          </div>
 
-          <div class="row-bottom">
-            <div class="tag"><span>#</span> semana ▼</div>
-            <div class="actions">
-              <button class="cancel">Cancelar</button>
-              <button class="add">Adicionar tarefa</button>
+          <div class="card">
+            <div class="top">
+              <div class="title-desc">
+                <textarea id="title" class="task-input" placeholder="Nome da tarefa"></textarea>
+                <textarea id="desc" class="task-input" placeholder="Descrição"></textarea>
+              </div>
+            </div>
+
+            <div class="controls">
+              <button class="btn-Control">📅 Data</button>
+              <button class="btn-Control">🏳 Prioridade</button>
+              <button class="btn-Control">⏰ Lembretes</button>
+              <button class="btn-Control">•••</button>
+            </div>
+
+            <div class="row-bottom">
+              <div class="tag"><span>#</span> semana ▼</div>
+              <div class="actions">
+                <button class="cancel">Cancelar</button>
+                <button class="add">Adicionar tarefa</button>
+              </div>
             </div>
           </div>
-        </div>
-        <div>
-          <ul id="taskList">
-
-          </ul>
-        </div>
-        <a class="add-taks" onclick="addTask()"><span>+</span> Adicionar tarefa</a>
-        <div class="add-section-wrapper" onclick="addSection()">
-          <div class="line"></div>
-          <span class="text">Adicionar seção</span>
-          <div class="line"></div>
-        </div>
-      </section>
+          <a class="add-taks" onclick="addTask()"><span>+</span> Adicionar tarefa</a>
+          <div class="add-section-wrapper" onclick="addSection()">
+            <div class="line"></div>
+            <span class="text">Adicionar seção</span>
+            <div class="line"></div>
+          </div>
+        </section>
+      </div>
 
       <section id="tasksContainer" class="tasks"></section>
     </main>
