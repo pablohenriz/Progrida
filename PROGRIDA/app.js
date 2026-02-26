@@ -283,13 +283,32 @@ const addBtn = document.getElementsByClassName("add");
 
 title.addEventListener("input", ()=>{
 
-    if(title.value.length < 1 ) {
-        addBtn[0].style.background = "#58b8ac";
-        addBtn[0].style.filter = "brightness(0.8)";
+    if(title.value.length >= 1 ) {
+        addBtn[0].style.background = "#58b8ac"; //88ccc4
+        addBtn[0].style.filter = "none";
+        addBtn[0].style.cursor = "pointer";
     }
     else {
-        addBtn[0].style.background = "#88ccc4";
-        addBtn[0].style.filter = "none";
+        addBtn[0].style.background = "#88ccc4"; //58b8ac
+        addBtn[0].style.filter = "brightness(0.8)";
+        addBtn[0].style.cursor = "not-allowed";
     };
 
 })
+
+function addTask() {
+    const cardtaks = document.getElementsByClassName("card");
+    if (cardtaks[0].style.display === "none"){
+        cardtaks[0].style.display = "block"; 
+    }
+    else {
+        cardtaks[0].style.display = "none";
+    }
+}
+
+function cancelTansk() {
+    const cardtaks = document.getElementsByClassName("card");
+
+    cardtaks[0  ].style.display = "none";
+}
+

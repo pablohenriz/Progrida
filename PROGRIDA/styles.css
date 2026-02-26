@@ -201,6 +201,7 @@ h1 {
   gap: 12px;
   transition: border-color 0.2s;
   margin-bottom: 10px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 /* O Círculo da imagem 2 */
@@ -338,6 +339,7 @@ h1 {
   border-radius:clamp(8px,1vw,12px);
   padding:clamp(14px,2vw,22px);
   color:#ccc;
+  display: none;
 }
 
 .top{
@@ -453,15 +455,18 @@ h1 {
   padding:7px 14px;
   border-radius:6px;
   cursor:pointer;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .add{
-  background:#88ccc4;
+  background:#58b8ac;
   border:none;
   color:#fff;
   padding:7px 14px;
   border-radius:6px;
   cursor:not-allowed;
+  filter: brightness(0.8);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .cancel:hover{
