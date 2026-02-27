@@ -1,11 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ek9DnPRG4ss=",
+  "dgSpecHash": "0U84/VlEK+w=",
   "success": true,
-  "projectFilePath": "C:\\Users\\pablo.hsbraga\\Documents\\git\\Progrida\\PROGRIDA\\backend\\backend.csproj",
-  "expectedPackageFiles": [
-    "C:\\Users\\pablo.hsbraga\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.3\\microsoft.aspnetcore.openapi.10.0.3.nupkg.sha512",
-    "C:\\Users\\pablo.hsbraga\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
-  ],
+  "projectFilePath": "/home/pablo/Documentos/GitHub/Progrida-Projeto/PROGRIDA/backend/backend.csproj",
+  "expectedPackageFiles": [],
   "logs": []
 }
