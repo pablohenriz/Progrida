@@ -273,7 +273,7 @@
 
 const textarea = document.querySelector('.task-input');
 
-textarea.addEventListener('input', ()=>{
+textarea.addEventListener('input', () => {
   textarea.style.height = "auto";
   textarea.style.height = textarea.scrollHeight + "px";
 });
@@ -281,103 +281,165 @@ textarea.addEventListener('input', ()=>{
 const title = document.getElementById('title');
 const addBtn = document.getElementsByClassName("add");
 
-title.addEventListener("input", ()=>{
+title.addEventListener("input", () => {
 
-    if(title.value.length >= 1 ) {
-        addBtn[0].style.background = "#58b8ac"; //88ccc4
-        addBtn[0].style.filter = "none";
-        addBtn[0].style.cursor = "pointer";
-    }
-    else {
-        addBtn[0].style.background = "#88ccc4"; //58b8ac
-        addBtn[0].style.filter = "brightness(0.8)";
-        addBtn[0].style.cursor = "not-allowed";
-    };
+  if (title.value.length >= 1) {
+    addBtn[0].style.background = "#58b8ac"; //88ccc4
+    addBtn[0].style.filter = "none";
+    addBtn[0].style.cursor = "pointer";
+  }
+  else {
+    addBtn[0].style.background = "#88ccc4"; //58b8ac
+    addBtn[0].style.filter = "brightness(0.8)";
+    addBtn[0].style.cursor = "not-allowed";
+  };
 
 })
 
+function addCardTask() {
+  const cardtaks = document.getElementsByClassName("card");
+  if (cardtaks[0].style.display === "none") {
+    cardtaks[0].style.display = "block";
+  }
+  else {
+    cardtaks[0].style.display = "none";
+  }
+}
+
 function addTask() {
-    const cardtaks = document.getElementsByClassName("card");
-    if (cardtaks[0].style.display === "none"){
-        cardtaks[0].style.display = "block"; 
-    }
-    else {
-        cardtaks[0].style.display = "none";
-    }
+  const add = document.getElementsByClassName("add");
+  const inputTitle = document.getElementById("title").value;
+  const inputDesc = document.getElementById("desc").value;
+
+  adicionarTarefa(inputTitle, inputDesc);
+  clearTaskButton(inputTitle);
+
+  console.log("O que voce digitou foi ", inputTitle, " e a descrição foi ", inputDesc);
+
+  document.getElementById('title').value = "";
+  document.getElementById('desc').value = "";
+  alert("tarefa salva")
+}
+
+function adicionarTarefa(titulo, descricao) {
+  const lista = document.getElementById('lista-tarefas');
+
+  // Criamos o HTML exatamente com a sua estrutura
+  const novaTarefaHTML = `
+    <div class="task">
+      <div class="task-left">
+        <input type="checkbox" class="circle-check">
+      </div>
+      <div class="task-content">
+        <p class="task-title">${titulo}</p>
+        <p class="task-meta">${descricao}</p>
+      </div>
+      <button class="clearTask" onclick="clearTaskButton()">x</button>
+    </div>
+  `;
+
+  // Adiciona ao final da lista
+  lista.insertAdjacentHTML('beforeend', novaTarefaHTML);
 }
 
 function cancelTansk() {
-    const cardtaks = document.getElementsByClassName("card");
+  const cardtaks = document.getElementsByClassName("card");
 
-    cardtaks[0  ].style.display = "none";
+  cardtaks[0].style.display = "none";
 }
 
+function clearTaskButton(titulo) {
+  // 1. Busque pelo ID do overlay (o pai que escurece a tela)
+  const overlay = document.getElementById("modal-overlay");
+  const prompt = document.querySelector(".prompt-Confirm");
+  const titleTak = document.getElementById("titleTaks");
+  
+  if (overlay) {
+    // IMPORTANTE: Use "flex" para que o justify-content: center funcione
+    overlay.style.display = "flex";
 
+    // Se quiser que o prompt interno apareça:
+    prompt.style.display = "flex";
+    titleTak.innerText = titulo;
+  }
+}
 
+const overlay = document.getElementById("modal-overlay");
 
+overlay.addEventListener("click", () => {
+  overlay.style.display = "none";
+});
+
+// Função para fechar (coloque no botão Cancelar)
+function cancelPrompt() {
+  const overlay = document.getElementById("modal-overlay");
+  if (overlay) {
+    overlay.style.display = "none";
+  }
+}
 
 //Adicionar tarefa no backend
-const titleInput = document.getElementById('title');
-const descInput = document.getElementById('desc');
-const addTaskBtn = document.querySelector('.add');
+// const titleInput = document.getElementById('title');
+// const descInput = document.getElementById('desc');
+// const addTaskBtn = document.querySelector('.add');
 
-async function adicionarNoBackend() {
-    const tarefaTexto = titleInput.value.trim();
+// async function adicionarNoBackend() {
+//     const tarefaTexto = titleInput.value.trim();
 
-    if (tarefaTexto.length === 0) {
-        alert('Por favor, insira um título para a tarefa.');
-        return;
-    }
+//     if (tarefaTexto.length === 0) {
+//         alert('Por favor, insira um título para a tarefa.');
+//         return;
+//     }
 
-    try {
-        const resposta = await fetch('http://localhost:5000/api/tarefa', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(tarefaTexto)
-        });
+//     try {
+//         const resposta = await fetch('http://localhost:5000/api/tarefa', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify(tarefaTexto)
+//         });
 
-        if (resposta.ok) {
-            const dados = await resposta.json();
-            console.log(dados.mensagem);
+//         if (resposta.ok) {
+//             const dados = await resposta.json();
+//             console.log(dados.mensagem);
 
-            titleInput.value= "";
-            alert("tarefa salva no backend com sucesso!");
+//             titleInput.value= "";
+//             alert("tarefa salva no backend com sucesso!");
 
-        } else {
-            alert('Erro ao salvar a tarefa no backend.');
-        }
-    } catch (erro) {
-        console.error("Não foi possivel conectar o backend:", erro);
-        alert("O servidor C# está ligado? Verifique o terminal.");
-    }
-}
+//         } else {
+//             alert('Erro ao salvar a tarefa no backend.');
+//         }
+//     } catch (erro) {
+//         console.error("Não foi possivel conectar o backend:", erro);
+//         alert("O servidor C# está ligado? Verifique o terminal.");
+//     }
+// }
 
-addTaskBtn.addEventListener("click", adicionarNoBackend);
+// addTaskBtn.addEventListener("click", adicionarNoBackend);
 
-async function carregarTarefas() {
-    try {
-        const resposta = await fetch('http://localhost:5000/api/tarefa');
-        if (!resposta.ok) return;
+// async function carregarTarefas() {
+//     try {
+//         const resposta = await fetch('http://localhost:5000/api/tarefa');
+//         if (!resposta.ok) return;
 
-        const tarefas = await resposta.json();
-        const container = document.getElementById('tasksContainer'); 
+//         const tarefas = await resposta.json();
+//         const container = document.getElementById('tasksContainer');
 
-        if (container && tarefas.length > 0) {
-            container.innerHTML = ""; 
-            tarefas.forEach(t => {
-                container.innerHTML += `
-                    <article class="task">
-                        <p class="task-title">${t}</p>
-                    </article>
-                `;
-            });
-        }
-    } catch (erro) {
-        console.error("Erro ao carregar do backend:", erro);
-    }
-}
+//         if (container && tarefas.length > 0) {
+//             container.innerHTML = "";
+//             tarefas.forEach(t => {
+//                 container.innerHTML += `
+//                     <article class="task">
+//                         <p class="task-title">${t}</p>
+//                     </article>
+//                 `;
+//             });
+//         }
+//     } catch (erro) {
+//         console.error("Erro ao carregar do backend:", erro);
+//     }
+// }
 
-// Chame a função apenas aqui
-window.addEventListener('load', carregarTarefas);
+// // Chame a função apenas aqui
+// window.addEventListener('load', carregarTarefas);

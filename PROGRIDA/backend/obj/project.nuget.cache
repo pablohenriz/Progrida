@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "0U84/VlEK+w=",
+  "dgSpecHash": "mP8cicVoczw=",
   "success": true,
-  "projectFilePath": "/home/pablo/Documentos/GitHub/Progrida-Projeto/PROGRIDA/backend/backend.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\pablo.hsbraga\\Documents\\git\\Progrida\\PROGRIDA\\backend\\backend.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\pablo.hsbraga\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.24\\microsoft.netcore.app.ref.8.0.24.nupkg.sha512",
+    "C:\\Users\\pablo.hsbraga\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.24\\microsoft.windowsdesktop.app.ref.8.0.24.nupkg.sha512",
+    "C:\\Users\\pablo.hsbraga\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.24\\microsoft.aspnetcore.app.ref.8.0.24.nupkg.sha512",
+    "C:\\Users\\pablo.hsbraga\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.24\\microsoft.netcore.app.host.win-x64.8.0.24.nupkg.sha512"
+  ],
   "logs": []
 }

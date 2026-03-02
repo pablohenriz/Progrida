@@ -1,0 +1,41 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PROGRIDA", "PROGRIDA", "{87CB8E29-B6F0-6E49-FF48-013EC559A21C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Progrida-1", "Progrida-1", "{E2EA8ED3-4BE2-A0EB-B7D4-B44677AE6BAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend", "PROGRIDA\backend\backend.csproj", "{5FFB02F1-67BF-A03C-8CE2-8194033AECC5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PROGRIDA", "PROGRIDA", "{2F505AC9-8FC0-BEA6-AAFD-FF2D27A96D27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend", "Progrida-1\PROGRIDA\backend\backend.csproj", "{1CEC9301-3136-4C48-661C-C1E77832A1BF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5FFB02F1-67BF-A03C-8CE2-8194033AECC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FFB02F1-67BF-A03C-8CE2-8194033AECC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FFB02F1-67BF-A03C-8CE2-8194033AECC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FFB02F1-67BF-A03C-8CE2-8194033AECC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CEC9301-3136-4C48-661C-C1E77832A1BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CEC9301-3136-4C48-661C-C1E77832A1BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CEC9301-3136-4C48-661C-C1E77832A1BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CEC9301-3136-4C48-661C-C1E77832A1BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5FFB02F1-67BF-A03C-8CE2-8194033AECC5} = {87CB8E29-B6F0-6E49-FF48-013EC559A21C}
+		{2F505AC9-8FC0-BEA6-AAFD-FF2D27A96D27} = {E2EA8ED3-4BE2-A0EB-B7D4-B44677AE6BAF}
+		{1CEC9301-3136-4C48-661C-C1E77832A1BF} = {2F505AC9-8FC0-BEA6-AAFD-FF2D27A96D27}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4B9F5E5E-CCC7-42CF-A1F1-7BEBDBBF75AF}
+	EndGlobalSection
+EndGlobal

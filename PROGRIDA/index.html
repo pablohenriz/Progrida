@@ -10,6 +10,19 @@
 
 <body>
   <div class="app">
+
+    <div id="modal-overlay">
+      <div class="prompt-Confirm">
+        <h1>Excluir Tarefa</h1>
+        <p>A tarefa <span id="titleTaks"></span> será permanentemente excluída.</p>
+        <div class="button-Prompt">
+          <button class="cancel-P" onclick="cancelPrompt()">Cancelar</button>
+          <button class="clear-P" onclick="clearPrompt()">Excluir</button>
+        </div>
+      </div>
+    </div>
+
+
     <aside class="sidebar" id="sidebar">
       <div class="profile">
         <div class="avatar">P</div>
@@ -51,14 +64,17 @@
           <!-- <input id="newTaskInput" type="text" placeholder="Adicionar uma tarefa" />
         <input id="newTaskDate" type="date" />
         <button id="newTaskBtn" type= "button">Adicionar</button> -->
-          
-          <div class="task">
-            <div class="task-left">
-              <input type="checkbox" class="circle-check" onclick="checkButton"></input>
-            </div>
-            <div class="task-content">
-              <p class="task-title">Tarefa </p>
-              <p class="task-meta">desc</p>
+
+          <div id="lista-tarefas">
+            <div class="task">
+              <div class="task-left">
+                <input type="checkbox" class="circle-check" onclick="checkButton"></input>
+              </div>
+              <div class="task-content">
+                <p class="task-title">Tarefa </p>
+                <p class="task-meta">desc</p>
+              </div>
+              <button class="clearTask" onclick="clearTaskButton()">x</button>
             </div>
           </div>
 
@@ -82,11 +98,11 @@
               <!-- <div class="tag"><span>#</span> semana ▼</div> -->
               <div class="actions">
                 <button class="cancel" onclick="cancelTansk()" id="cancelT">Cancelar</button>
-                <button class="add">Adicionar tarefa</button>
+                <button class="add" onclick="addTask()">Adicionar tarefa</button>
               </div>
             </div>
           </div>
-          <a class="add-taks" onclick="addTask()"><span>+</span> Adicionar tarefa</a>
+          <a class="add-taks" onclick="addCardTask()"><span>+</span> Adicionar tarefa</a>
           <div class="add-section-wrapper" onclick="addSection()">
             <div class="line"></div>
             <span class="text">Adicionar seção</span>
