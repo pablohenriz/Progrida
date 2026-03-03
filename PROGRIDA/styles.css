@@ -360,6 +360,7 @@ h1 {
   padding: clamp(14px, 2vw, 22px);
   color: #ccc;
   display: none;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .top {
@@ -479,7 +480,7 @@ h1 {
 }
 
 .add {
-  background: #58b8ac;
+  background: var(--accent); /* Cor inicial clara */
   border: none;
   color: #fff;
   padding: 7px 14px;
@@ -487,6 +488,11 @@ h1 {
   cursor: not-allowed;
   filter: brightness(0.8);
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  
+  /* ADICIONE ESTA LINHA ABAIXO */
+  transition: all 0.3s dotted; 
+  filter: brightness(0.9);
+  opacity: 0.6;
 }
 
 .cancel:hover {
@@ -685,6 +691,13 @@ h1 {
   /* Centralização perfeita do conteúdo */
   justify-content: center;
   align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+/* Quando o overlay estiver ativo */
+#modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .prompt-Confirm {
@@ -698,6 +711,15 @@ h1 {
   flex-direction: column;
   gap: 15px;
   box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+
+  /* --- ANIMAÇÃO DE "SURGIR" (Scale) --- */
+  transform: scale(0.8);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Quando o overlay estiver ativo, o card interno cresce */
+#modal-overlay.active .prompt-Confirm {
+  transform: scale(1);
 }
 /* Estilizando o título H1 */
 .prompt-Confirm h1 {

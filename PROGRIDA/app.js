@@ -278,23 +278,29 @@ textarea.addEventListener('input', () => {
   textarea.style.height = textarea.scrollHeight + "px";
 });
 
-const title = document.getElementById('title');
-const addBtn = document.getElementsByClassName("add");
+const titleInput = document.getElementById('title');
+const addBtn = document.querySelector('.add'); // Seleciona o botão de adicionar
 
-title.addEventListener("input", () => {
+titleInput.addEventListener("input", () => {
+  // Verifica se existe texto real (removendo espaços vazios)
+  const temTexto = titleInput.value.trim().length > 0;
 
-  if (title.value.length >= 1) {
-    addBtn[0].style.background = "#58b8ac"; //88ccc4
-    addBtn[0].style.filter = "none";
-    addBtn[0].style.cursor = "pointer";
+  if (temTexto) {
+    // ESTADO ATIVO: Cor forte e clicável
+    addBtn.style.backgroundColor = "var(--accent-strong)"; 
+    addBtn.style.filter = "none";
+    addBtn.style.cursor = "pointer";
+    addBtn.style.opacity = "1";
+    addBtn.disabled = false; // Habilita o clique
+  } else {
+    // ESTADO DESATIVADO: Cor clara e bloqueado
+    addBtn.style.backgroundColor = "var(--accent)"; 
+    addBtn.style.filter = "brightness(0.9)";
+    addBtn.style.cursor = "not-allowed";
+    addBtn.style.opacity = "0.6"; // Fica mais "apagado"
+    addBtn.disabled = true; // Desabilita o clique
   }
-  else {
-    addBtn[0].style.background = "#88ccc4"; //58b8ac
-    addBtn[0].style.filter = "brightness(0.8)";
-    addBtn[0].style.cursor = "not-allowed";
-  };
-
-})
+});
 
 function addCardTask() {
   const cardtaks = document.getElementsByClassName("card");
@@ -306,13 +312,14 @@ function addCardTask() {
   }
 }
 
+
+
 function addTask() {
   const add = document.getElementsByClassName("add");
   const inputTitle = document.getElementById("title").value;
   const inputDesc = document.getElementById("desc").value;
 
   adicionarTarefa(inputTitle, inputDesc);
-  clearTaskButton(inputTitle);
 
   console.log("O que voce digitou foi ", inputTitle, " e a descrição foi ", inputDesc);
 
@@ -321,10 +328,11 @@ function addTask() {
   alert("tarefa salva")
 }
 
+// No seu app.js, dentro da função adicionarTarefa:
 function adicionarTarefa(titulo, descricao) {
+  const cardtaks = document.getElementsByClassName("card");
   const lista = document.getElementById('lista-tarefas');
 
-  // Criamos o HTML exatamente com a sua estrutura
   const novaTarefaHTML = `
     <div class="task">
       <div class="task-left">
@@ -334,12 +342,12 @@ function adicionarTarefa(titulo, descricao) {
         <p class="task-title">${titulo}</p>
         <p class="task-meta">${descricao}</p>
       </div>
-      <button class="clearTask" onclick="clearTaskButton()">x</button>
+      <button class="clearTask" onclick="clearTaskButton(this)">x</button>
     </div>
   `;
 
-  // Adiciona ao final da lista
   lista.insertAdjacentHTML('beforeend', novaTarefaHTML);
+  cardtaks[0].style.display = "none";
 }
 
 function cancelTansk() {
@@ -348,34 +356,40 @@ function cancelTansk() {
   cardtaks[0].style.display = "none";
 }
 
-function clearTaskButton(titulo) {
-  // 1. Busque pelo ID do overlay (o pai que escurece a tela)
+function clearTaskButton(botaoClicado) {
   const overlay = document.getElementById("modal-overlay");
   const prompt = document.querySelector(".prompt-Confirm");
-  const titleTak = document.getElementById("titleTaks");
-  
-  if (overlay) {
-    // IMPORTANTE: Use "flex" para que o justify-content: center funcione
-    overlay.style.display = "flex";
+  const spanTituloModal = document.getElementById("titleTaks");
 
-    // Se quiser que o prompt interno apareça:
+  // 1. Acha o container da task que contém esse botão
+  const elementoTask = botaoClicado.closest('.task');
+  
+  // 2. Pega o texto do título dentro desse container
+  const tituloDaTask = elementoTask.querySelector('.task-title').innerText;
+
+  if (overlay) {
+    overlay.style.display = "flex";
     prompt.style.display = "flex";
-    titleTak.innerText = titulo;
+    
+    // 3. Coloca o título no span do modal
+    spanTituloModal.innerText = tituloDaTask;
+
+    // Opcional: Salvar qual elemento deve ser excluído para usar depois no botão "Excluir"
+    window.taskParaExcluir = elementoTask;
   }
 }
-
 const overlay = document.getElementById("modal-overlay");
 
 overlay.addEventListener("click", () => {
   overlay.style.display = "none";
 });
 
-// Função para fechar (coloque no botão Cancelar)
-function cancelPrompt() {
-  const overlay = document.getElementById("modal-overlay");
-  if (overlay) {
-    overlay.style.display = "none";
+function clearPrompt() {
+  if (window.taskParaExcluir) {
+    window.taskParaExcluir.remove(); // Remove do HTML
+    window.taskParaExcluir = null;   // Limpa a memória
   }
+  cancelPrompt(); // Fecha o modal
 }
 
 //Adicionar tarefa no backend

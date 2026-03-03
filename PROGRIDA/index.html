@@ -66,7 +66,7 @@
         <button id="newTaskBtn" type= "button">Adicionar</button> -->
 
           <div id="lista-tarefas">
-            <div class="task">
+            <div class="task" id="task1">
               <div class="task-left">
                 <input type="checkbox" class="circle-check" onclick="checkButton"></input>
               </div>
@@ -74,7 +74,7 @@
                 <p class="task-title">Tarefa </p>
                 <p class="task-meta">desc</p>
               </div>
-              <button class="clearTask" onclick="clearTaskButton()">x</button>
+              <button class="clearTask" onclick="clearTaskButton(this)">x</button>
             </div>
           </div>
 
