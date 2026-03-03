@@ -386,10 +386,10 @@ overlay.addEventListener("click", () => {
 
 function clearPrompt() {
   if (window.taskParaExcluir) {
-    window.taskParaExcluir.remove(); // Remove do HTML
-    window.taskParaExcluir = null;   // Limpa a memória
+    window.taskParaExcluir.remove(); 
+    window.taskParaExcluir = null;   
   }
-  cancelPrompt(); // Fecha o modal
+  cancelPrompt(); 
 }
 
 //Adicionar tarefa no backend
