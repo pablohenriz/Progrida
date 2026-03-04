@@ -328,13 +328,12 @@ function addTask() {
   alert("tarefa salva")
 }
 
-// No seu app.js, dentro da função adicionarTarefa:
 function adicionarTarefa(titulo, descricao) {
-  const cardtaks = document.getElementsByClassName("card");
   const lista = document.getElementById('lista-tarefas');
+  const id = Date.now(); // Gerando um ID temporário para controle
 
   const novaTarefaHTML = `
-    <div class="task">
+    <div class="task" draggable="true" data-id="${id}">
       <div class="task-left">
         <input type="checkbox" class="circle-check">
       </div>
@@ -347,6 +346,11 @@ function adicionarTarefa(titulo, descricao) {
   `;
 
   lista.insertAdjacentHTML('beforeend', novaTarefaHTML);
+  
+  // Após adicionar, precisamos reatribuir os eventos de drag aos novos elementos
+  initDragAndDrop(); 
+  
+  const cardtaks = document.getElementsByClassName("card");
   cardtaks[0].style.display = "none";
 }
 
@@ -390,6 +394,143 @@ function clearPrompt() {
     window.taskParaExcluir = null;   
   }
   cancelPrompt(); 
+}
+
+let draggedItem = null;
+
+function initDragAndDrop() {
+  const tasks = document.querySelectorAll('.task');
+  const container = document.getElementById('lista-tarefas');
+
+  tasks.forEach(task => {
+    // Início do arrasto
+    task.addEventListener('dragstart', (e) => {
+      draggedItem = task;
+      task.classList.add('dragging'); // Classe para efeito visual
+      e.dataTransfer.effectAllowed = 'move';
+    });
+
+    // Fim do arrasto
+    task.addEventListener('dragend', () => {
+      draggedItem = null;
+      task.classList.remove('dragging');
+      // Aqui você poderia chamar sua função save() se quiser persistir a nova ordem
+    });
+  });
+
+  // Lógica do container para aceitar o item
+  container.addEventListener('dragover', (e) => {
+    e.preventDefault(); // Necessário para permitir o drop
+    const afterElement = getDragAfterElement(container, e.clientY);
+    if (afterElement == null) {
+      container.appendChild(draggedItem);
+    } else {
+      container.insertBefore(draggedItem, afterElement);
+    }
+  });
+}
+
+
+// Função auxiliar para calcular a posição do mouse entre os itens
+function getDragAfterElement(container, y) {
+  const draggableElements = [...container.querySelectorAll('.task:not(.dragging)')];
+
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    if (offset < 0 && offset > closest.offset) {
+      return { offset: offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
+}
+
+// Inicializa na primeira carga
+window.addEventListener('load', () => {
+    initDragAndDrop();
+});
+
+
+
+function addSection() {
+  const cardtaks = document.getElementsByClassName("add-name-task");
+  if (cardtaks[0].style.display === "none") {
+    cardtaks[0].style.display = "block";
+  }
+  else {
+    cardtaks[0].style.display = "none";
+  }
+}
+
+
+function cancelSection() {
+  const cardtaks = document.getElementsByClassName("add-name-task");
+  const sectionInput = document.getElementById('sectionTitle');
+  cardtaks[0].style.display = "none";
+
+  document.getElementById('sectionTitle').value = "";
+}
+
+
+const sectionInput = document.getElementById('sectionTitle');
+const sectionAddBtn = document.getElementsByClassName('add-section-btn'); // Seleciona o botão de adicionar
+
+sectionInput.addEventListener("input", () => {
+  // Verifica se existe texto real (removendo espaços vazios)
+  const temTexto = sectionInput.value.trim().length > 0;
+
+  if (temTexto) {
+    // ESTADO ATIVO: Cor forte e clicável
+    sectionAddBtn[0].style.backgroundColor = "var(--accent-strong)"; 
+    sectionAddBtn[0].style.filter = "none";
+    sectionAddBtn[0].style.cursor = "pointer";
+    sectionAddBtn[0].style.opacity = "1";
+    sectionAddBtn[0].disabled = false; // Habilita o clique
+  } else {
+    // ESTADO DESATIVADO: Cor clara e bloqueado
+    sectionAddBtn[0].style.backgroundColor = "var(--accent)"; 
+    sectionAddBtn[0].style.filter = "brightness(0.9)";
+    sectionAddBtn[0].style.cursor = "not-allowed";
+    sectionAddBtn[0].style.opacity = "0.6"; // Fica mais "apagado"
+    sectionAddBtn[0].disabled = true; // Desabilita o clique
+  }
+});
+
+
+// Função apenas para abrir/fechar o card de input (Troque o nome no seu HTML se preferir)
+function openSectionCard() {
+  const cardSection = document.querySelector(".add-name-task");
+  cardSection.style.display = cardSection.style.display === "none" ? "block" : "none";
+  document.getElementById('sectionTitle').focus();
+}
+
+// NOVA FUNÇÃO: Para criar a seção visualmente na lista
+function confirmAddSection() {
+  const input = document.getElementById('sectionTitle');
+  const title = input.value.trim();
+  const lista = document.getElementById('lista-tarefas');
+
+  if (title === "") return;
+
+  const sectionHTML = `
+    <div class="section-header" draggable="true">
+      <div class="section-header-left">
+        <span class="arrow">▼</span>
+        <h3 class="section-title-text">${title}</h3>
+      </div>
+      <div class="section-header-right">•••</div>
+    </div>
+  `;
+
+  // Insere a seção na lista
+  lista.insertAdjacentHTML('beforeend', sectionHTML);
+  
+  // Reativa o Drag and Drop para incluir a nova seção se quiser movê-la
+  initDragAndDrop();
+
+  // Limpa e fecha
+  cancelSection();
 }
 
 //Adicionar tarefa no backend

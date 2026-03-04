@@ -538,8 +538,8 @@ h1 {
 }
 
 .quick-add input {
-  background: #ececec;
-  color: #222;
+  background: transparent;
+  color: var(--text);
 }
 
 .tasks {
@@ -780,6 +780,190 @@ h1 {
   cursor: pointer;
   font-weight: 600;
   font-size: 14px;
+}
+
+
+/* Estilo enquanto o item está sendo movido */
+.task.dragging {
+  opacity: 0.5;
+  border: 2px dashed var(--accent-strong);
+  background-color: var(--background-alt);
+  cursor: grabbing;
+}
+
+/* Garante que o cursor mude ao passar o mouse */
+.task {
+  cursor: grab;
+  transition: transform 0.1s ease;
+  user-select: none; /* Evita selecionar texto ao arrastar */
+}
+
+.task:active {
+  cursor: grabbing;
+}
+
+/* ==========================================================================
+   SESSÃO: ADICIONAR SEÇÃO (ESTILO FIEL À IMAGEM)
+   ========================================================================== */
+
+.add-name-task {
+  background-color: var(--bg-dark);
+  padding: 16px;
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  border-radius: 10px;
+  margin-top: 10px;
+  /* Opcional: borda sutil para separar do fundo se necessário */
+  border: 1px solid #2a2a2d; 
+}
+
+/* Estilo do Input de Seção */
+.add-name-input {
+  background-color: var(--bg-dark); /* Ou a cor que desejar */
+  border: 1px solid #333333;
+  border-radius: 5px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  width: 100%;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  margin-bottom: 20px;
+  
+  /* Garante que o fundo seja removido */
+  appearance: none; 
+  -webkit-appearance: none;
+}
+.add-name-input::placeholder {
+  color: var(--line); /* Usa sua cor cinza definida no :root */
+}
+
+.add-name-input:focus {
+  border-color: #555555;
+}
+
+/* Container dos Botões */
+.group-bottom-add-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+/* Botão Adicionar (Vinho/Marrom conforme a imagem enviada) */
+.add-name-task .add-section-btn {
+  background-color: var(--accent); /* Tom vinho escuro da imagem */
+  color: var(--text); /* Texto rosado/acinzentado da imagem */
+  border: 1px solid transparent;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  filter: brightness(0.9);
+  opacity: 0.6;
+}
+
+.add-name-task .add-section-btn:hover {
+}
+
+/* Botão Cancelar Seção */
+.add-name-task .cancel-section-btn {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.add-name-task .cancel-section-btn:hover {
+  opacity: 0.7;
+}
+
+
+/* Estilo da Seção já criada na lista */
+.section-header {
+  display: flex;  
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0 10px 0;
+  margin-top: 20px;
+  border-bottom: 1px solid #333; /* A linha fina abaixo do título */
+  width: 100%;
+}
+
+/* Container que segura a seta e o título */
+.section-header-left {
+  display: flex;
+  align-items: center; /* Alinha verticalmente no centro */
+  gap: 4px; /* Espaço pequeno entre a seta e o texto */
+}
+
+.section-header-left .arrow {
+  background: transparent !important; /* Totalmente transparente */
+  border: none !important;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  
+  /* Reset de layout para não quebrar linha */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  
+  padding: 0;
+  margin: 0;
+  width: 24px; 
+  height: 24px;
+
+  
+  transition: transform 0.2s ease;
+  outline: none;
+}
+
+.section-header-left .arrow:hover {
+  background: var(--accent);
+}
+
+/* Rotação suave ao fechar */
+.section-header-left .arrow.collapsed {
+  transform: rotate(-90deg);
+}
+
+/* Ajuste do título da seção para não ter margens que empurrem a seta */
+.section-title-text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1; /* Garante que o texto não tenha altura extra */
+}
+
+.section-header-left h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.section-header-right {
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+/* Esconder o campo de input por padrão */
+.add-name-task {
+  display: none; 
+}
+
+/* Classe para mostrar o campo */
+.add-name-task.active {
+  display: flex;
 }
 
 @media (max-width: 1120px) {
