@@ -62,8 +62,8 @@
 
         <section class="quick-add">
           <!-- <input id="newTaskInput" type="text" placeholder="Adicionar uma tarefa" />
-        <input id="newTaskDate" type="date" />
-        <button id="newTaskBtn" type= "button">Adicionar</button> -->
+          <input id="newTaskDate" type="date" />
+          <button id="newTaskBtn" type= "button">Adicionar</button> -->
 
           <div id="lista-tarefas">
             <div class="task" id="task1" draggable="true">
@@ -101,29 +101,63 @@
                 <button class="add" onclick="addTask()">Adicionar tarefa</button>
               </div>
             </div>
-            
+
           </div>
+
           <a class="add-taks" onclick="addCardTask()"><span>+</span> Adicionar tarefa</a>
+
           <div class="add-section-wrapper" onclick="addSection()">
             <div class="line"></div>
             <span class="text">Adicionar seção</span>
             <div class="line"></div>
           </div>
 
-          <div class="add-name-task">
-            <input type="text" class="add-name-input" id="sectionTitle" placeholder="Nomear esta seção">
-            <div class="group-bottom-add-section">
-              <button class="add-section-btn" onclick="addSection()">Adicionar seção</button>
-              <button class="cancel-section-btn" onclick="cancelSection()">Cancelar</button>
+          <div class="group-section">
+            <div class="add-name-task">
+              <input type="text" class="add-name-input" id="sectionTitle" placeholder="Nomear esta seção">
+              <div class="group-bottom-add-section">
+                <button class="add-section-btn" onclick="addSection()">Adicionar seção</button>
+                <button class="cancel-section-btn" onclick="cancelSection()">Cancelar</button>
+              </div>
             </div>
-          </div>
 
-          <div class="section-header" draggable="true">
-            <div class="section-header-left">
-              <button class="arrow">▼</button>
-              <h3 class="section-title-text">Terfa Section</h3>
+            <div class="section-header" draggable="true">
+              <div class="section-header-left">
+                <button class="arrow" onclick="clicArrow()">▼</button>
+                <h3 class="section-title-text">Terfa Section</h3>
+              </div>
+              <div class="section-header-right">•••</div>
             </div>
-            <div class="section-header-right">•••</div>
+
+
+
+            <a class="add-taks" id="addt1" onclick="addCardTask1()"><span>+</span> Adicionar tarefa</a>
+
+
+
+            <div class="card" id="cardTaksEdi1">
+              <div class="top">
+                <div class="title-desc">
+                  <textarea id="title" class="task-input" placeholder="Nome da tarefa" value=""></textarea>
+                  <textarea id="desc" class="task-input" placeholder="Descrição"></textarea>
+                </div>
+              </div>
+
+              <!-- <div class="controls">
+              <button class="btn-Control">📅 Data</button>
+              <button class="btn-Control">🏳 Prioridade</button>
+              <button class="btn-Control">⏰ Lembretes</button>
+              <button class="btn-Control">•••</button>
+            </div> -->
+
+              <div class="row-bottom">
+                <!-- <div class="tag"><span>#</span> semana ▼</div> -->
+                <div class="actions">
+                  <button class="cancel" onclick="cancelTansk1()" id="cancelT">Cancelar</button>
+                  <button class="add" onclick="addTask1()">Adicionar tarefa</button>
+                </div>  
+              </div>
+            </div>
           </div>
         </section>
       </div>

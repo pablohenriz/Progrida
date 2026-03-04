@@ -375,7 +375,7 @@ function clearTaskButton(botaoClicado) {
     overlay.style.display = "flex";
     prompt.style.display = "flex";
     
-    // 3. Coloca o título no span do modal
+    // 3. Coloca o título no span do modal   
     spanTituloModal.innerText = tituloDaTask;
 
     // Opcional: Salvar qual elemento deve ser excluído para usar depois no botão "Excluir"
@@ -532,6 +532,74 @@ function confirmAddSection() {
   // Limpa e fecha
   cancelSection();
 }
+
+let estaAberto = true;
+
+
+function clicArrow() {
+  const arrow = document.getElementsByClassName("arrow");
+  const add = document.getElementById("addt1");
+
+
+  if(estaAberto) {
+    arrow[0].style.transform = "rotate(0deg)"; 
+    add.style.display = "flex";
+    estaAberto = false ;
+  } else {
+    arrow[0].style.transform = "rotate(-90deg)"; 
+    add.style.display = "none";
+    estaAberto = true ;
+  }
+}
+
+function addCardTask1() {
+  const cardtaks = document.getElementById("cardTaksEdi1");
+  const add = document.getElementById("addt1");
+  if (cardtaks.style.display === "none") {
+    cardtaks.style.display = "block";
+    add.style.display = "none";
+  }
+  else {
+    cardtaks.style.display = "none";
+  }
+}
+
+
+const card = document.querySelector('#cardTaksEdi1');
+const titleInput1 = card.querySelector('#title'); 
+const addBtn1 = card.querySelector('.add');
+const cardtaks = document.getElementById("cardTaksEdi1");
+
+titleInput1.addEventListener("input", () => {
+  // Use a variável correta: titleInput1
+  const temTexto = titleInput1.value.trim().length > 0;
+
+  if (temTexto) {
+    addBtn1.style.backgroundColor = "var(--accent-strong)"; 
+    addBtn1.style.filter = "none";
+    addBtn1.style.cursor = "pointer";
+    addBtn1.style.opacity = "1";
+    addBtn1.disabled = false;
+  } else {
+    addBtn1.style.backgroundColor = "var(--accent)"; 
+    addBtn1.style.fil
+    ter = "brightness(0.9)";
+    addBtn1.style.cur
+    sor = "not-allowed";
+    addBtn1.style.opa
+    city = "0.6";
+    addBtn1.disabled = true;
+  }
+});
+
+function cancelTansk1() {
+  const cardtaks = document.getElementById("#cardTaksEdi1");
+
+  cardtaks.style.display = "none";
+}
+
+
+
 
 //Adicionar tarefa no backend
 // const titleInput = document.getElementById('title');
