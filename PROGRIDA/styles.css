@@ -193,18 +193,18 @@ h1 {
 
 /* Container principal da tarefa */
 .task {
+  width: 100%; /* Força a tarefa a ocupar toda a largura disponível */
   border: 1px solid #4b4b50;
   background: #26262b;
   border-radius: 10px;
   padding: 12px;
-  display: flex;
-  /* Mudamos para flex para facilitar o alinhamento horizontal */
-  align-items: flex-start;
-  /* Alinha o círculo com a primeira linha de texto */
+  display: flex; /* Alinhamento flexível */
+  align-items: center; 
   gap: 12px;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
   margin-bottom: 10px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  cursor: grab;
 }
 
 /* O Círculo da imagem 2 */
@@ -970,6 +970,12 @@ h1 {
 /* Classe para mostrar o campo */
 .add-name-task.active {
   display: flex;
+}
+
+#lista-tarefas1 {
+  display: none;
+  flex-direction: column ;
+  margin-top: 20px;
 }
 
 @media (max-width: 1120px) {

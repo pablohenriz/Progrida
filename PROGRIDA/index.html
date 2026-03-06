@@ -112,24 +112,37 @@
             <div class="line"></div>
           </div>
 
-          <div class="group-section">
+          <div id="main-sections-container">
             <div class="add-name-task">
               <input type="text" class="add-name-input" id="sectionTitle" placeholder="Nomear esta seção">
               <div class="group-bottom-add-section">
-                <button class="add-section-btn" onclick="addSection()">Adicionar seção</button>
+                <button class="add-section-btn" onclick="addSectionS()">Adicionar seção</button>
                 <button class="cancel-section-btn" onclick="cancelSection()">Cancelar</button>
               </div>
             </div>
 
-            <div class="section-header" draggable="true">
-              <div class="section-header-left">
-                <button class="arrow" onclick="clicArrow()">▼</button>
-                <h3 class="section-title-text">Terfa Section</h3>
+            <div class="section-list">
+              <div class="section-header" draggable="true">
+                <div class="section-header-left">
+                  <button class="arrow" onclick="clicArrow()">▼</button>
+                  <h3 class="section-title-text">Terfa Section</h3>
+                </div>
+                <div class="section-header-right">•••</div>
               </div>
-              <div class="section-header-right">•••</div>
             </div>
 
-
+            <div id="lista-tarefas1">
+              <div class="task" id="task1" draggable="true">
+                <div class="task-left">
+                  <input type="checkbox" class="circle-check" onclick="checkButton"></input>
+                </div>
+                <div class="task-content">
+                  <p class="task-title">Taref </p>
+                  <p class="task-meta">desc</p>
+                </div>
+                <button class="clearTask" onclick="clearTaskButton(this)">x </button>
+              </div>
+            </div>
 
             <a class="add-taks" id="addt1" onclick="addCardTask1()"><span>+</span> Adicionar tarefa</a>
 
@@ -138,8 +151,8 @@
             <div class="card" id="cardTaksEdi1">
               <div class="top">
                 <div class="title-desc">
-                  <textarea id="title" class="task-input" placeholder="Nome da tarefa" value=""></textarea>
-                  <textarea id="desc" class="task-input" placeholder="Descrição"></textarea>
+                  <textarea id="title1" class="task-input" placeholder="Nome da tarefa" value=""></textarea>
+                  <textarea id="desc1" class="task-input" placeholder="Descrição"></textarea>
                 </div>
               </div>
 
@@ -148,14 +161,14 @@
               <button class="btn-Control">🏳 Prioridade</button>
               <button class="btn-Control">⏰ Lembretes</button>
               <button class="btn-Control">•••</button>
-            </div> -->
+              </div> -->
 
               <div class="row-bottom">
                 <!-- <div class="tag"><span>#</span> semana ▼</div> -->
                 <div class="actions">
-                  <button class="cancel" onclick="cancelTansk1()" id="cancelT">Cancelar</button>
-                  <button class="add" onclick="addTask1()">Adicionar tarefa</button>
-                </div>  
+                  <button class="cancel" id="cancel1" onclick="cancelTansk1()" id="cancelT">Cancelar</button>
+                  <button class="add" id="add1" onclick="addTask1()">Adicionar tarefa</button>
+                </div>
               </div>
             </div>
           </div>
