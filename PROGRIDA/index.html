@@ -127,7 +127,12 @@
                   <button class="arrow" onclick="clicArrow()">▼</button>
                   <h3 class="section-title-text">Terfa Section</h3>
                 </div>
-                <div class="section-header-right">•••</div>
+                <div class="section-header-right" onclick="toggleSectionMenu(this)">
+                  •••
+                  <div class="section-menu">
+                    <button onclick="deleteSectionPrompt(this)">🗑 Excluir seção</button>
+                  </div>
+                </div>
               </div>
             </div>
 

@@ -1,694 +1,481 @@
-const textarea = document.querySelector('.task-input');
+// =============================================================================
+// ESTADO GLOBAL DA APLICAÇÃO
+// =============================================================================
+const state = {
+  tasks: [],          // { id, title, desc, done, sectionId: null }
+  sections: [],       // { id, title, collapsed }
+  taskParaExcluir: null,
+};
 
-textarea.addEventListener('input', () => {
-  textarea.style.height = "auto";
-  textarea.style.height = textarea.scrollHeight + "px";
-});
+// =============================================================================
+// PERSISTÊNCIA (localStorage)
+// =============================================================================
+function salvarEstado() {
+  try {
+    localStorage.setItem("tasks",    JSON.stringify(state.tasks));
+    localStorage.setItem("sections", JSON.stringify(state.sections));
+  } catch (_) {}
+}
 
-
-
-
-
-
-
-
-const titleInput = document.getElementById('title');
-const addBtn = document.querySelector('.add'); // Seleciona o botão de adicionar
-
-titleInput.addEventListener("input", () => {
-  // Verifica se existe texto real (removendo espaços vazios)
-  const temTexto = titleInput.value.trim().length > 0;
-
-  if (temTexto) {
-    // ESTADO ATIVO: Cor forte e clicável
-    addBtn.style.backgroundColor = "var(--accent-strong)";
-    addBtn.style.filter = "none";
-    addBtn.style.cursor = "pointer";
-    addBtn.style.opacity = "1";
-    addBtn.disabled = false; // Habilita o clique
-  } else {
-    // ESTADO DESATIVADO: Cor clara e bloqueado
-    addBtn.style.backgroundColor = "var(--accent)";
-    addBtn.style.filter = "brightness(0.9)";
-    addBtn.style.cursor = "not-allowed";
-    addBtn.style.opacity = "0.6"; // Fica mais "apagado"
-    addBtn.disabled = true; // Desabilita o clique
-  }
-});
-
-
-
-
-
-
-
-
-
-
-
-function addCardTask() {
-  const cardtaks = document.getElementsByClassName("card");
-  if (cardtaks[0].style.display === "none") {
-    cardtaks[0].style.display = "block";
-  }
-  else {
-    cardtaks[0].style.display = "none";
+function carregarEstado() {
+  try {
+    state.tasks    = JSON.parse(localStorage.getItem("tasks"))    || [];
+    state.sections = JSON.parse(localStorage.getItem("sections")) || [];
+  } catch (_) {
+    state.tasks    = [];
+    state.sections = [];
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function addTask() {
-  const add = document.getElementsByClassName("add");
-  const inputTitle = document.getElementById("title").value;
-  const inputDesc = document.getElementById("desc").value;
-
-  adicionarTarefa(inputTitle, inputDesc);
-
-  console.log("O que voce digitou foi ", inputTitle, " e a descrição foi ", inputDesc);
-
-  document.getElementById('title').value = "";
-  document.getElementById('desc').value = "";
-  alert("tarefa salva")
+// =============================================================================
+// UTILITÁRIOS
+// =============================================================================
+function gerarId() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
 }
 
+function escapeHTML(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
 
+function autoResize(el) {
+  if (!el) return;
+  el.style.height = "auto";
+  el.style.height = el.scrollHeight + "px";
+}
 
+// =============================================================================
+// TOAST — substitui alert()
+// =============================================================================
+function showToast(msg, tipo = "success") {
+  let container = document.getElementById("toast-container");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "toast-container";
+    container.style.cssText = [
+      "position:fixed", "bottom:24px", "right:24px",
+      "display:flex", "flex-direction:column", "gap:8px", "z-index:99999"
+    ].join(";");
+    document.body.appendChild(container);
+  }
 
+  const toast = document.createElement("div");
+  toast.textContent = msg;
+  toast.style.cssText = [
+    `background:${tipo === "error" ? "#df6b6b" : "var(--accent-strong)"}`,
+    "color:#fff", "padding:10px 18px", "border-radius:8px",
+    "font-size:14px", "font-weight:600",
+    "box-shadow:0 4px 16px rgba(0,0,0,.4)",
+    "transition:opacity .3s ease",
+  ].join(";");
 
+  container.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = "0"; }, 2000);
+  setTimeout(() => toast.remove(), 2350);
+}
 
+// =============================================================================
+// ATIVAR / DESATIVAR BOTÃO CONFORME INPUT
+// =============================================================================
+function bindAddButton(input, btn) {
+  if (!input || !btn) return;
 
+  function atualizar() {
+    const tem = input.value.trim().length > 0;
+    btn.style.backgroundColor = tem ? "var(--accent-strong)" : "var(--accent)";
+    btn.style.filter          = tem ? "none" : "brightness(0.9)";
+    btn.style.cursor          = tem ? "pointer" : "not-allowed";
+    btn.style.opacity         = tem ? "1" : "0.6";
+    btn.disabled              = !tem;
+  }
 
+  input.addEventListener("input", atualizar);
+  atualizar();
+}
 
+// =============================================================================
+// MODAL DE CONFIRMAÇÃO
+// =============================================================================
+function abrirModalExclusao(taskEl) {
+  const overlay = document.getElementById("modal-overlay");
+  const titulo  = taskEl.querySelector(".task-title")?.innerText || "";
 
+  document.getElementById("titleTaks").innerText = titulo;
+  state.taskParaExcluir = taskEl;
 
+  overlay.style.display = "flex";
+  // Pequeno delay para a transição de entrada funcionar
+  requestAnimationFrame(() => overlay.classList.add("active"));
+}
 
-function adicionarTarefa(titulo, descricao) {
-  const lista = document.getElementById('lista-tarefas');
-  const id = Date.now(); // Gerando um ID temporário para controle
+function fecharModal() {
+  const overlay = document.getElementById("modal-overlay");
+  overlay.classList.remove("active");
+  setTimeout(() => { overlay.style.display = "none"; }, 300);
+  state.taskParaExcluir = null;
+}
 
-  const novaTarefaHTML = `
-    <div class="task" draggable="true" data-id="${id}">
-      <div class="task-left">
-        <input type="checkbox" class="circle-check">
-      </div>
-      <div class="task-content">
-        <p class="task-title">${titulo}</p>
-        <p class="task-meta">${descricao}</p>
-      </div>
-      <button class="clearTask" onclick="clearTaskButton(this)">x</button>
+// Expõe para o HTML (onclick="cancelPrompt()")
+function cancelPrompt() { fecharModal(); }
+
+function clearPrompt() {
+  if (state.taskParaExcluir) {
+    const id = state.taskParaExcluir.dataset.id;
+    state.tasks = state.tasks.filter(t => t.id !== id);
+    state.taskParaExcluir.remove();
+    salvarEstado();
+    showToast("Tarefa excluída.");
+  }
+  fecharModal();
+}
+
+// Fechar clicando no fundo escuro
+document.getElementById("modal-overlay").addEventListener("click", function (e) {
+  if (e.target === this) fecharModal();
+});
+
+// =============================================================================
+// CRIAR ELEMENTO DE TAREFA — única fonte da verdade
+// =============================================================================
+function criarTaskEl(task) {
+  const div = document.createElement("div");
+  div.className = `task${task.done ? " done" : ""}`;
+  div.setAttribute("draggable", "true");
+  div.dataset.id = task.id;
+
+  div.innerHTML = `
+    <div class="task-left">
+      <input type="checkbox" class="circle-check" ${task.done ? "checked" : ""}>
     </div>
+    <div class="task-content">
+      <p class="task-title">${escapeHTML(task.title)}</p>
+      ${task.desc ? `<p class="task-meta">${escapeHTML(task.desc)}</p>` : ""}
+    </div>
+    <button class="clearTask" title="Excluir">✕</button>
   `;
 
-  lista.insertAdjacentHTML('beforeend', novaTarefaHTML);
+  // Checkbox
+  div.querySelector(".circle-check").addEventListener("change", function () {
+    task.done = this.checked;
+    div.classList.toggle("done", task.done);
+    salvarEstado();
+  });
 
-  // Após adicionar, precisamos reatribuir os eventos de drag aos novos elementos
-  initDragAndDrop();
+  // Botão excluir
+  div.querySelector(".clearTask").addEventListener("click", () => abrirModalExclusao(div));
 
-  const cardtaks = document.getElementsByClassName("card");
-  cardtaks[0].style.display = "none";
+  // Drag
+  div.addEventListener("dragstart", e => {
+    dragState.item = div;
+    div.classList.add("dragging");
+    e.dataTransfer.effectAllowed = "move";
+  });
+  div.addEventListener("dragend", () => {
+    div.classList.remove("dragging");
+    dragState.item = null;
+  });
+
+  return div;
+}
+
+// =============================================================================
+// LISTA PRINCIPAL (sem seção)
+// =============================================================================
+function addCardTask() {
+  const card = document.getElementById("cardTaksEdi");
+  const aberto = card.style.display === "flex";
+  card.style.display = aberto ? "none" : "flex";
+  if (!aberto) document.getElementById("title").focus();
 }
 
 function cancelTansk() {
-  const cardtaks = document.getElementsByClassName("card");
-
-  cardtaks[0].style.display = "none";
+  document.getElementById("cardTaksEdi").style.display = "none";
+  document.getElementById("title").value = "";
+  document.getElementById("desc").value  = "";
 }
 
+function addTask() {
+  const titulo = document.getElementById("title").value.trim();
+  const desc   = document.getElementById("desc").value.trim();
+  if (!titulo) return;
 
+  const task = { id: gerarId(), title: titulo, desc, done: false, sectionId: null };
+  state.tasks.push(task);
+  salvarEstado();
 
+  document.getElementById("lista-tarefas").appendChild(criarTaskEl(task));
+  registrarContainersDroppable();
 
-
-
-
-
-
-
-
-
-
-
-function clearTaskButton(botaoClicado) {
-  const overlay = document.getElementById("modal-overlay");
-  const prompt = document.querySelector(".prompt-Confirm");
-  const spanTituloModal = document.getElementById("titleTaks");
-
-  // 1. Acha o container da task que contém esse botão
-  const elementoTask = botaoClicado.closest('.task');
-
-  // 2. Pega o texto do título dentro desse container
-  const tituloDaTask = elementoTask.querySelector('.task-title').innerText;
-
-  if (overlay) {
-    overlay.style.display = "flex";
-    prompt.style.display = "flex";
-
-    // 3. Coloca o título no span do modal   
-    spanTituloModal.innerText = tituloDaTask;
-
-    // Opcional: Salvar qual elemento deve ser excluído para usar depois no botão "Excluir"
-    window.taskParaExcluir = elementoTask;
-  }
-}
-const overlay = document.getElementById("modal-overlay");
-
-overlay.addEventListener("click", () => {
-  overlay.style.display = "none";
-});
-
-function clearPrompt() {
-  if (window.taskParaExcluir) {
-    window.taskParaExcluir.remove();
-    window.taskParaExcluir = null;
-  }
-  cancelPrompt();
+  document.getElementById("title").value = "";
+  document.getElementById("desc").value  = "";
+  document.getElementById("cardTaksEdi").style.display = "none";
+  showToast("Tarefa adicionada!");
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-let draggedItem = null;
-
-function initDragAndDrop() {
-  const tasks = document.querySelectorAll('.task');
-  const container = document.getElementById('lista-tarefas');
-
-  tasks.forEach(task => {
-    // Início do arrasto
-    task.addEventListener('dragstart', (e) => {
-      draggedItem = task;
-      task.classList.add('dragging'); // Classe para efeito visual
-      e.dataTransfer.effectAllowed = 'move';
-    });
-
-    // Fim do arrasto
-    task.addEventListener('dragend', () => {
-      draggedItem = null;
-      task.classList.remove('dragging');
-      // Aqui você poderia chamar sua função save() se quiser persistir a nova ordem
-    });
-  });
-
-  // Lógica do container para aceitar o item
-  container.addEventListener('dragover', (e) => {
-    e.preventDefault(); // Necessário para permitir o drop
-    const afterElement = getDragAfterElement(container, e.clientY);
-    if (afterElement == null) {
-      container.appendChild(draggedItem);
-    } else {
-      container.insertBefore(draggedItem, afterElement);
-    }
-  });
-}
-
-
-
-
-
-
-
-
-
-
-
-
-// Função auxiliar para calcular a posição do mouse entre os itens
-function getDragAfterElement(container, y) {
-  const draggableElements = [...container.querySelectorAll('.task:not(.dragging)')];
-
-  return draggableElements.reduce((closest, child) => {
-    const box = child.getBoundingClientRect();
-    const offset = y - box.top - box.height / 2;
-    if (offset < 0 && offset > closest.offset) {
-      return { offset: offset, element: child };
-    } else {
-      return closest;
-    }
-  }, { offset: Number.NEGATIVE_INFINITY }).element;
-}
-
-// Inicializa na primeira carga
-window.addEventListener('load', () => {
-  initDragAndDrop();
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// =============================================================================
+// SEÇÕES DINÂMICAS
+// =============================================================================
 function addSection() {
-  const cardtaks = document.getElementsByClassName("add-name-task");
-  if (cardtaks[0].style.display === "none") {
-    cardtaks[0].style.display = "block";
-  }
-  else {
-    cardtaks[0].style.display = "none";
+  const card = document.querySelector(".add-name-task");
+  card.classList.toggle("active");
+  if (card.classList.contains("active")) {
+    document.getElementById("sectionTitle").focus();
   }
 }
-
 
 function cancelSection() {
-  const cardtaks = document.getElementsByClassName("add-name-task");
-  const sectionInput = document.getElementById('sectionTitle');
-  cardtaks[0].style.display = "none";
-
-  document.getElementById('sectionTitle').value = "";
+  document.querySelector(".add-name-task").classList.remove("active");
+  document.getElementById("sectionTitle").value = "";
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const sectionInput = document.getElementById('sectionTitle');
-const sectionAddBtn = document.getElementsByClassName('add-section-btn'); // Seleciona o botão de adicionar
-
-sectionInput.addEventListener("input", () => {
-  // Verifica se existe texto real (removendo espaços vazios)
-  const temTexto = sectionInput.value.trim().length > 0;
-
-  if (temTexto) {
-    // ESTADO ATIVO: Cor forte e clicável
-    sectionAddBtn[0].style.backgroundColor = "var(--accent-strong)";
-    sectionAddBtn[0].style.filter = "none";
-    sectionAddBtn[0].style.cursor = "pointer";
-    sectionAddBtn[0].style.opacity = "1";
-    sectionAddBtn[0].disabled = false; // Habilita o clique
-  } else {
-    // ESTADO DESATIVADO: Cor clara e bloqueado
-    sectionAddBtn[0].style.backgroundColor = "var(--accent)";
-    sectionAddBtn[0].style.filter = "brightness(0.9)";
-    sectionAddBtn[0].style.cursor = "not-allowed";
-    sectionAddBtn[0].style.opacity = "0.6"; // Fica mais "apagado"
-    sectionAddBtn[0].disabled = true; // Desabilita o clique
-  }
-});
-
-
-
-
-
-
-
-
-
-
-
-// Função apenas para abrir/fechar o card de input (Troque o nome no seu HTML se preferir)
-function openSectionCard() {
-  const cardSection = document.querySelector(".add-name-task");
-  cardSection.style.display = cardSection.style.display === "none" ? "block" : "none";
-  document.getElementById('sectionTitle').focus();
-}
-
-
-
-
-
-
-
-
-
-
-
 
 function addSectionS() {
-  const input = document.getElementById('sectionTitle');
-  const title = input.value.trim();
-  const container = document.getElementById('main-sections-container');
+  const input = document.getElementById("sectionTitle");
+  const titulo = input.value.trim();
+  if (!titulo) return;
 
-  if (title === "") return;
+  const section = { id: gerarId(), title: titulo, collapsed: false };
+  state.sections.push(section);
+  salvarEstado();
 
-  // Geramos um ID único para esta seção específica
-  const sectionId = "section-" + Date.now();
+  renderizarSecao(section);
 
-  const sectionHTML = `
-    <div class="group-section" id="${sectionId}">
-      <div class="section-header">
-        <div class="section-header-left">
-          <button class="arrow" onclick="toggleSectionVisibility(this)">▼</button>
-          <h3 class="section-title-text">${title}</h3>
-        </div>
-        <div class="section-header-right">•••</div>
-      </div>
-
-      <div class="tasks-list-container"></div>
-
-      <a class="add-taks" onclick="createNewTaskRow(this)"><span>+</span> Adicionar tarefa</a>
-    </div>
-  `;
-
-  container.insertAdjacentHTML('beforeend', sectionHTML);
-  
-  // Limpa o campo e fecha o card de criação
   input.value = "";
   cancelSection();
-  initDragAndDrop(); // Atualiza o sistema de arrastar para a nova seção
+  showToast(`Seção "${titulo}" criada!`);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-let estaAberto = true;
-
-function clicArrow() {
-  const arrow = document.getElementsByClassName("arrow");
-  const add = document.getElementById("addt1");
-  const listTask1 = document.getElementById("lista-tarefas1");
-
-
-  if (estaAberto) {
-    arrow[0].style.transform = "rotate(0deg)";
-    add.style.display = "flex";
-    listTask1.style.display = "flex";
-    estaAberto = false;
-  } else {
-    arrow[0].style.transform = "rotate(-90deg)";
-    add.style.display = "none";
-    listTask1.style.display = "none";
-    estaAberto = true;
-  }
-}
-
-
-
-
-
-
-
-//adicionar uma task
-function addCardTask1() {
-  const cardtaks = document.getElementById("cardTaksEdi1");
-  const add = document.getElementById("addt1");
-  if (cardtaks.style.display === "none") {
-    cardtaks.style.display = "block";
-    add.style.display = "none";
-  }
-  else {
-    cardtaks.style.display = "none";
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-const card = document.getElementById('cardTaksEdi1');
-const titleInput1 = document.getElementById('title1');
-const addBtn1 = document.getElementById('add1');
-
-// O evento correto é 'input' para detectar digitação
-titleInput1.addEventListener("input", () => {
-  const temTexto = titleInput1.value.trim().length > 0;
-
-  if (temTexto) {
-    addBtn1.style.backgroundColor = "var(--accent-strong)";
-    addBtn1.style.filter = "none";
-    addBtn1.style.cursor = "pointer";
-    addBtn1.style.opacity = "1";
-    addBtn1.disabled = false;
-  } else {
-    // Corrigido: Propriedades escritas sem quebras de linha
-    addBtn1.style.backgroundColor = "var(--accent)";
-    addBtn1.style.filter = "brightness(0.9)";
-    addBtn1.style.cursor = "not-allowed";
-    addBtn1.style.opacity = "0.6";
-    addBtn1.disabled = true;
-  }
-});
-
-
-
-
-
-
-
-
-
-let estaAberto2 = true;
-
-function cancelTansk1() {
-  const cardtaks = document.getElementById("cardTaksEdi1");
-  const arrow = document.getElementsByClassName("arrow");
-  const add = document.getElementById("addt1");
-
-
-  if (estaAberto2) {
-    cardtaks.style.display = "none";
-    arrow[0].style.transform = "rotate(-90deg)";
-    add.style.display = "flex";
-
-  } else {
-    cardtaks.style.display = "flex";
-    arrow[0].style.transform = "rotate(0deg)";
-  }
-
-}
-
-
-
-
-
-
-
-
-function addTask1() {
-  const inputTitle = document.getElementById("title1").value;
-  const inputDesc = document.getElementById("desc1").value;
-
-  adicionarTarefa(inputTitle, inputDesc);
-
-  console.log("O que voce digitou foi ", inputTitle, " e a descrição foi ", inputDesc);
-
-  document.getElementById('title1').value = "";
-  document.getElementById('desc1').value = "";
-  alert("tarefa salva")
-}
-
-
-
-
-
-
-
-
-
-
-
-
-function adicionarTarefa(titulo, descricao) {
-  const lista = document.getElementById('lista-tarefas1');
-  const id = Date.now(); // Gerando um ID temporário para controle
-
-  const novaTarefaHTML = `
-    <div class="task" draggable="true" data-id="${id}">
-      <div class="task-left">
-        <input type="checkbox" class="circle-check">
+function renderizarSecao(section) {
+  const container = document.getElementById("main-sections-container");
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "group-section";
+  wrapper.dataset.sectionId = section.id;
+
+  wrapper.innerHTML = `
+    <div class="section-header">
+      <div class="section-header-left">
+        <button class="arrow${section.collapsed ? " collapsed" : ""}" title="Expandir / Recolher">▼</button>
+        <h3 class="section-title-text">${escapeHTML(section.title)}</h3>
       </div>
-      <div class="task-content">
-        <p class="task-title">${titulo}</p>
-        <p class="task-meta">${descricao}</p>
+      <div class="section-header-right" title="Opções">•••</div>
+    </div>
+    <div class="tasks-list-container" id="tasks-${section.id}"></div>
+    <a class="add-taks add-task-section-btn"><span>+</span> Adicionar tarefa</a>
+    <div class="card section-card" style="display:none;">
+      <div class="top">
+        <div class="title-desc">
+          <textarea class="task-input sec-title-input" placeholder="Nome da tarefa"></textarea>
+          <textarea class="task-input sec-desc-input"  placeholder="Descrição"></textarea>
+        </div>
       </div>
-      <button class="clearTask" onclick="clearTaskButton(this)">x</button>
+      <div class="row-bottom">
+        <div class="actions">
+          <button class="cancel sec-cancel-btn">Cancelar</button>
+          <button class="add sec-add-btn" disabled>Adicionar tarefa</button>
+        </div>
+      </div>
     </div>
   `;
 
-  lista.insertAdjacentHTML('beforeend', novaTarefaHTML);
+  container.appendChild(wrapper);
 
-  // Após adicionar, precisamos reatribuir os eventos de drag aos novos elementos
-  initDragAndDrop();
+  const lista       = wrapper.querySelector(`#tasks-${section.id}`);
+  const arrow       = wrapper.querySelector(".arrow");
+  const addTaskLink = wrapper.querySelector(".add-task-section-btn");
+  const card        = wrapper.querySelector(".section-card");
+  const titleInput  = wrapper.querySelector(".sec-title-input");
+  const descInput   = wrapper.querySelector(".sec-desc-input");
+  const addBtn      = wrapper.querySelector(".sec-add-btn");
+  const cancelBtn   = wrapper.querySelector(".sec-cancel-btn");
 
-  const cardtaks = document.getElementById("cardTaksEdi1");
-  const add = document.getElementById("addt1");
-  cardtaks.style.display = "none";
-  add.style.display = "flex";
+  // Restaurar estado de colapso
+  if (section.collapsed) {
+    lista.style.display       = "none";
+    addTaskLink.style.display = "none";
+  }
 
-}
+  // Restaurar tarefas salvas desta seção
+  state.tasks
+    .filter(t => t.sectionId === section.id)
+    .forEach(t => lista.appendChild(criarTaskEl(t)));
 
-
-
-
-
-
-let draggedItem1 = null;
-
-function initDragAndDrop() {
-  // Seleciona todas as tarefas, não importa em qual lista elas estejam
-  const tasks = document.querySelectorAll('.task');
-  const containers = document.querySelectorAll('#lista-tarefas, #lista-tarefas1');
-
-  tasks.forEach(task => {
-    task.addEventListener('dragstart', (e) => {
-      draggedItem = task; // Use a variável global draggedItem
-      task.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-    });
-
-    task.addEventListener('dragend', () => {
-      task.classList.remove('dragging');
-      draggedItem = null;
-    });
+  // Toggle colapso
+  arrow.addEventListener("click", () => {
+    section.collapsed = !section.collapsed;
+    arrow.classList.toggle("collapsed", section.collapsed);
+    lista.style.display       = section.collapsed ? "none" : "";
+    addTaskLink.style.display = section.collapsed ? "none" : "flex";
+    if (section.collapsed) card.style.display = "none";
+    salvarEstado();
   });
 
-  containers.forEach(container => {
-    container.addEventListener('dragover', (e) => {
+  // Abrir card de nova tarefa
+  addTaskLink.addEventListener("click", () => {
+    card.style.display = "flex";
+    addTaskLink.style.display = "none";
+    titleInput.focus();
+  });
+
+  // Cancelar
+  cancelBtn.addEventListener("click", () => {
+    card.style.display        = "none";
+    addTaskLink.style.display = "flex";
+    titleInput.value = "";
+    descInput.value  = "";
+    bindAddButton(titleInput, addBtn); // reset visual
+  });
+
+  // Ativar botão ao digitar
+  bindAddButton(titleInput, addBtn);
+  titleInput.addEventListener("input", () => autoResize(titleInput));
+  descInput.addEventListener("input",  () => autoResize(descInput));
+
+  // Adicionar tarefa na seção
+  addBtn.addEventListener("click", () => {
+    const titulo = titleInput.value.trim();
+    const desc   = descInput.value.trim();
+    if (!titulo) return;
+
+    const task = { id: gerarId(), title: titulo, desc, done: false, sectionId: section.id };
+    state.tasks.push(task);
+    salvarEstado();
+
+    lista.appendChild(criarTaskEl(task));
+    registrarContainersDroppable();
+
+    titleInput.value = "";
+    descInput.value  = "";
+    card.style.display        = "none";
+    addTaskLink.style.display = "flex";
+    showToast("Tarefa adicionada!");
+  });
+
+  // Registrar lista como droppable
+  registrarContainersDroppable();
+}
+
+// =============================================================================
+// DRAG AND DROP — implementação única e centralizada
+// =============================================================================
+const dragState = { item: null };
+
+function registrarContainersDroppable() {
+  document.querySelectorAll("#lista-tarefas, .tasks-list-container").forEach(container => {
+    // Evita registrar duas vezes usando data attribute
+    if (container.dataset.dropRegistered) return;
+    container.dataset.dropRegistered = "true";
+
+    container.addEventListener("dragover", e => {
       e.preventDefault();
-      const afterElement = getDragAfterElement(container, e.clientY);
-      if (afterElement == null) {
-        container.appendChild(draggedItem);
-      } else {
-        container.insertBefore(draggedItem, afterElement);
-      }
+      if (!dragState.item) return;
+      const after = getDragAfterElement(container, e.clientY);
+      if (after == null) container.appendChild(dragState.item);
+      else container.insertBefore(dragState.item, after);
     });
   });
 }
 
-
-
-
-
-
-
-
-
-
-// Função auxiliar para calcular a posição do mouse entre os itens
 function getDragAfterElement(container, y) {
-  const draggableElements = [...container.querySelectorAll('.task:not(.dragging)')];
-
-  return draggableElements.reduce((closest, child) => {
-    const box = child.getBoundingClientRect();
+  const els = [...container.querySelectorAll(".task:not(.dragging)")];
+  return els.reduce((closest, child) => {
+    const box    = child.getBoundingClientRect();
     const offset = y - box.top - box.height / 2;
-    if (offset < 0 && offset > closest.offset) {
-      return { offset: offset, element: child };
-    } else {
-      return closest;
-    }
+    return offset < 0 && offset > closest.offset
+      ? { offset, element: child }
+      : closest;
   }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
 
-// Inicializa na primeira carga
-window.addEventListener('load', () => {
-  initDragAndDrop();
+// =============================================================================
+// SIDEBAR (mobile)
+// =============================================================================
+document.getElementById("openSidebarBtn")?.addEventListener("click", () => {
+  document.getElementById("sidebar").classList.add("open");
 });
 
+document.getElementById("toggleSidebarBtn")?.addEventListener("click", () => {
+  document.getElementById("sidebar").classList.remove("open");
+});
 
-//Adicionar tarefa no backend
-// const titleInput = document.getElementById('title');
-// const descInput = document.getElementById('desc');
-// const addTaskBtn = document.querySelector('.add');
+// Fechar sidebar ao clicar fora (mobile)
+document.addEventListener("click", e => {
+  const sidebar = document.getElementById("sidebar");
+  const openBtn = document.getElementById("openSidebarBtn");
+  if (
+    sidebar.classList.contains("open") &&
+    !sidebar.contains(e.target) &&
+    e.target !== openBtn
+  ) {
+    sidebar.classList.remove("open");
+  }
+});
 
-// async function adicionarNoBackend() {
-//     const tarefaTexto = titleInput.value.trim();
+// =============================================================================
+// DATA DE HOJE
+// =============================================================================
+function setarDataHoje() {
+  const el = document.getElementById("todayDate");
+  if (!el) return;
+  el.textContent = new Date().toLocaleDateString("pt-BR", {
+    weekday: "long", day: "numeric", month: "long",
+  });
+}
 
-//     if (tarefaTexto.length === 0) {
-//         alert('Por favor, insira um título para a tarefa.');
-//         return;
-//     }
+// =============================================================================
+// INICIALIZAÇÃO
+// =============================================================================
+window.addEventListener("load", () => {
+  carregarEstado();
 
-//     try {
-//         const resposta = await fetch('http://localhost:5000/api/tarefa', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify(tarefaTexto)
-//         });
+  // Auto-resize nos textareas do form principal
+  document.querySelectorAll(".task-input").forEach(el => {
+    el.addEventListener("input", () => autoResize(el));
+  });
 
-//         if (resposta.ok) {
-//             const dados = await resposta.json();
-//             console.log(dados.mensagem);
+  // Ativar botão principal
+  const titleMain = document.getElementById("title");
+  const addMain   = document.querySelector("#cardTaksEdi .add");
+  if (titleMain && addMain) {
+    addMain.id = "mainAddBtn"; // garante ID
+    bindAddButton(titleMain, addMain);
+  }
 
-//             titleInput.value= "";
-//             alert("tarefa salva no backend com sucesso!");
+  // Ativar botão de seção
+  const secTitleInput = document.getElementById("sectionTitle");
+  const secAddBtn     = document.querySelector(".add-section-btn");
+  if (secTitleInput && secAddBtn) bindAddButton(secTitleInput, secAddBtn);
 
-//         } else {
-//             alert('Erro ao salvar a tarefa no backend.');
-//         }
-//     } catch (erro) {
-//         console.error("Não foi possivel conectar o backend:", erro);
-//         alert("O servidor C# está ligado? Verifique o terminal.");
-//     }
-// }
+  // Renderizar tarefas salvas na lista principal
+  const listaPrincipal = document.getElementById("lista-tarefas");
+  // Limpa o item de exemplo estático do HTML
+  listaPrincipal.innerHTML = "";
+  state.tasks
+    .filter(t => t.sectionId === null)
+    .forEach(t => listaPrincipal.appendChild(criarTaskEl(t)));
 
-// addTaskBtn.addEventListener("click", adicionarNoBackend);
+  // Renderizar seções salvas
+  // Limpa seção de exemplo estática do HTML
+  document.getElementById("main-sections-container").innerHTML = `
+    <div class="add-name-task">
+      <input type="text" class="add-name-input" id="sectionTitle" placeholder="Nomear esta seção">
+      <div class="group-bottom-add-section">
+        <button class="add-section-btn" onclick="addSectionS()">Adicionar seção</button>
+        <button class="cancel-section-btn" onclick="cancelSection()">Cancelar</button>
+      </div>
+    </div>
+  `;
 
-// async function carregarTarefas() {
-//     try {
-//         const resposta = await fetch('http://localhost:5000/api/tarefa');
-//         if (!resposta.ok) return;
+  // Re-bind após recriar o HTML
+  const secTitleInput2 = document.getElementById("sectionTitle");
+  const secAddBtn2     = document.querySelector(".add-section-btn");
+  if (secTitleInput2 && secAddBtn2) bindAddButton(secTitleInput2, secAddBtn2);
 
-//         const tarefas = await resposta.json();
-//         const container = document.getElementById('tasksContainer');
+  state.sections.forEach(renderizarSecao);
 
-//         if (container && tarefas.length > 0) {
-//             container.innerHTML = "";
-//             tarefas.forEach(t => {
-//                 container.innerHTML += `
-//                     <article class="task">
-//                         <p class="task-title">${t}</p>
-//                     </article>
-//                 `;
-//             });
-//         }
-//     } catch (erro) {
-//         console.error("Erro ao carregar do backend:", erro);
-//     }
-// }
-
-// // Chame a função apenas aqui
-// window.addEventListener('load', carregarTarefas);
+  registrarContainersDroppable();
+  setarDataHoje();
+});
