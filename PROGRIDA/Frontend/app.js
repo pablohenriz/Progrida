@@ -510,7 +510,7 @@ function addTask1() {
   const inputTitle = document.getElementById("title1").value;
   const inputDesc = document.getElementById("desc1").value;
 
-  adicionarTarefa(inputTitle, inputDesc);
+  adicionarTarefa1(inputTitle, inputDesc);
 
   console.log("O que voce digitou foi ", inputTitle, " e a descrição foi ", inputDesc);
 
@@ -530,7 +530,7 @@ function addTask1() {
 
 
 
-function adicionarTarefa(titulo, descricao) {
+function adicionarTarefa1(titulo, descricao) {
   const lista = document.getElementById('lista-tarefas1');
   const id = Date.now(); // Gerando um ID temporário para controle
 
@@ -626,69 +626,3 @@ window.addEventListener('load', () => {
   initDragAndDrop();
 });
 
-
-//Adicionar tarefa no backend
-// const titleInput = document.getElementById('title');
-// const descInput = document.getElementById('desc');
-// const addTaskBtn = document.querySelector('.add');
-
-// async function adicionarNoBackend() {
-//     const tarefaTexto = titleInput.value.trim();
-
-//     if (tarefaTexto.length === 0) {
-//         alert('Por favor, insira um título para a tarefa.');
-//         return;
-//     }
-
-//     try {
-//         const resposta = await fetch('http://localhost:5000/api/tarefa', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify(tarefaTexto)
-//         });
-
-//         if (resposta.ok) {
-//             const dados = await resposta.json();
-//             console.log(dados.mensagem);
-
-//             titleInput.value= "";
-//             alert("tarefa salva no backend com sucesso!");
-
-//         } else {
-//             alert('Erro ao salvar a tarefa no backend.');
-//         }
-//     } catch (erro) {
-//         console.error("Não foi possivel conectar o backend:", erro);
-//         alert("O servidor C# está ligado? Verifique o terminal.");
-//     }
-// }
-
-// addTaskBtn.addEventListener("click", adicionarNoBackend);
-
-// async function carregarTarefas() {
-//     try {
-//         const resposta = await fetch('http://localhost:5000/api/tarefa');
-//         if (!resposta.ok) return;
-
-//         const tarefas = await resposta.json();
-//         const container = document.getElementById('tasksContainer');
-
-//         if (container && tarefas.length > 0) {
-//             container.innerHTML = "";
-//             tarefas.forEach(t => {
-//                 container.innerHTML += `
-//                     <article class="task">
-//                         <p class="task-title">${t}</p>
-//                     </article>
-//                 `;
-//             });
-//         }
-//     } catch (erro) {
-//         console.error("Erro ao carregar do backend:", erro);
-//     }
-// }
-
-// // Chame a função apenas aqui
-// window.addEventListener('load', carregarTarefas);
