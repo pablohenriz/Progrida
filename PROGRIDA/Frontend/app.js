@@ -2,7 +2,7 @@
 // ESTADO GLOBAL DA APLICAÇÃO
 // =============================================================================
 const state = {
-  tasks: [],          // { id, title, desc, done, sectionId: null }
+  tasks: [],          // { id, title, desc, done, sectionId, order }
   sections: [],       // { id, title, collapsed }
   taskParaExcluir: null,
 };
@@ -12,17 +12,17 @@ const state = {
 // =============================================================================
 function salvarEstado() {
   try {
-    localStorage.setItem("tasks",    JSON.stringify(state.tasks));
+    localStorage.setItem("tasks", JSON.stringify(state.tasks));
     localStorage.setItem("sections", JSON.stringify(state.sections));
-  } catch (_) {}
+  } catch (_) { }
 }
 
 function carregarEstado() {
   try {
-    state.tasks    = JSON.parse(localStorage.getItem("tasks"))    || [];
+    state.tasks = JSON.parse(localStorage.getItem("tasks")) || [];
     state.sections = JSON.parse(localStorage.getItem("sections")) || [];
   } catch (_) {
-    state.tasks    = [];
+    state.tasks = [];
     state.sections = [];
   }
 }
@@ -49,7 +49,7 @@ function autoResize(el) {
 }
 
 // =============================================================================
-// TOAST — substitui alert()
+// TOAST
 // =============================================================================
 function showToast(msg, tipo = "success") {
   let container = document.getElementById("toast-container");
@@ -87,10 +87,10 @@ function bindAddButton(input, btn) {
   function atualizar() {
     const tem = input.value.trim().length > 0;
     btn.style.backgroundColor = tem ? "var(--accent-strong)" : "var(--accent)";
-    btn.style.filter          = tem ? "none" : "brightness(0.9)";
-    btn.style.cursor          = tem ? "pointer" : "not-allowed";
-    btn.style.opacity         = tem ? "1" : "0.6";
-    btn.disabled              = !tem;
+    btn.style.filter = tem ? "none" : "brightness(0.9)";
+    btn.style.cursor = tem ? "pointer" : "not-allowed";
+    btn.style.opacity = tem ? "1" : "0.6";
+    btn.disabled = !tem;
   }
 
   input.addEventListener("input", atualizar);
@@ -102,13 +102,12 @@ function bindAddButton(input, btn) {
 // =============================================================================
 function abrirModalExclusao(taskEl) {
   const overlay = document.getElementById("modal-overlay");
-  const titulo  = taskEl.querySelector(".task-title")?.innerText || "";
+  const titulo = taskEl.querySelector(".task-title")?.innerText || "";
 
   document.getElementById("titleTaks").innerText = titulo;
   state.taskParaExcluir = taskEl;
 
   overlay.style.display = "flex";
-  // Pequeno delay para a transição de entrada funcionar
   requestAnimationFrame(() => overlay.classList.add("active"));
 }
 
@@ -119,7 +118,6 @@ function fecharModal() {
   state.taskParaExcluir = null;
 }
 
-// Expõe para o HTML (onclick="cancelPrompt()")
 function cancelPrompt() { fecharModal(); }
 
 function clearPrompt() {
@@ -133,13 +131,12 @@ function clearPrompt() {
   fecharModal();
 }
 
-// Fechar clicando no fundo escuro
 document.getElementById("modal-overlay").addEventListener("click", function (e) {
   if (e.target === this) fecharModal();
 });
 
 // =============================================================================
-// CRIAR ELEMENTO DE TAREFA — única fonte da verdade
+// CRIAR ELEMENTO DE TAREFA
 // =============================================================================
 function criarTaskEl(task) {
   const div = document.createElement("div");
@@ -158,28 +155,51 @@ function criarTaskEl(task) {
     <button class="clearTask" title="Excluir">✕</button>
   `;
 
-  // Checkbox
   div.querySelector(".circle-check").addEventListener("change", function () {
     task.done = this.checked;
     div.classList.toggle("done", task.done);
     salvarEstado();
+
+    enviarParaBancoDeDados(task);
   });
 
-  // Botão excluir
   div.querySelector(".clearTask").addEventListener("click", () => abrirModalExclusao(div));
 
-  // Drag
   div.addEventListener("dragstart", e => {
     dragState.item = div;
     div.classList.add("dragging");
     e.dataTransfer.effectAllowed = "move";
   });
+
+  // FIX: persiste sectionId e ordem após soltar o elemento arrastado
   div.addEventListener("dragend", () => {
     div.classList.remove("dragging");
+
+    if (dragState.item) {
+      const container = div.parentElement;
+      if (container) {
+        const sectionWrapper = container.closest(".group-section");
+        const t = state.tasks.find(t => t.id === div.dataset.id);
+        if (t) {
+          t.sectionId = sectionWrapper ? sectionWrapper.dataset.sectionId : null;
+        }
+        sincronizarOrdemNoEstado(container);
+      }
+      salvarEstado();
+    }
+
     dragState.item = null;
   });
 
   return div;
+}
+
+// FIX: atualiza o campo `order` no state conforme posição visual no DOM
+function sincronizarOrdemNoEstado(container) {
+  [...container.querySelectorAll(".task")].forEach((el, i) => {
+    const t = state.tasks.find(t => t.id === el.dataset.id);
+    if (t) t.order = i;
+  });
 }
 
 // =============================================================================
@@ -195,25 +215,54 @@ function addCardTask() {
 function cancelTansk() {
   document.getElementById("cardTaksEdi").style.display = "none";
   document.getElementById("title").value = "";
-  document.getElementById("desc").value  = "";
+  document.getElementById("desc").value = "";
 }
 
 function addTask() {
   const titulo = document.getElementById("title").value.trim();
-  const desc   = document.getElementById("desc").value.trim();
+  const desc = document.getElementById("desc").value.trim();
   if (!titulo) return;
 
-  const task = { id: gerarId(), title: titulo, desc, done: false, sectionId: null };
+  const task = {
+    id: gerarId(),
+    title: titulo,
+    desc,
+    done: false,
+    sectionId: null,
+    order: state.tasks.length
+  };
   state.tasks.push(task);
   salvarEstado();
+  enviarParaBancoDeDados(task);
 
   document.getElementById("lista-tarefas").appendChild(criarTaskEl(task));
   registrarContainersDroppable();
 
   document.getElementById("title").value = "";
-  document.getElementById("desc").value  = "";
+  document.getElementById("desc").value = "";
   document.getElementById("cardTaksEdi").style.display = "none";
   showToast("Tarefa adicionada!");
+}
+
+async function enviarParaBancoDeDados(task) {
+  try {
+    const resposta = await fetch("http://localhost:5221/tasks", { // Substitua pela sua URL
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(task) // Transforma o objeto 'task' em JSON
+    });
+
+    if (resposta.ok) {
+      console.log("Tarefa salva no servidor com sucesso!");
+    } else {
+      console.error("Erro ao salvar no servidor.");
+      showToast("Erro ao sincronizar com o servidor", "error");
+    }
+  } catch (error) {
+    console.error("Falha na conexão com o banco de dados:", error);
+  }
 }
 
 // =============================================================================
@@ -248,6 +297,15 @@ function addSectionS() {
   showToast(`Seção "${titulo}" criada!`);
 }
 
+// FIX: excluir seção e todas as suas tarefas
+function excluirSecao(section, wrapper) {
+  state.tasks = state.tasks.filter(t => t.sectionId !== section.id);
+  state.sections = state.sections.filter(s => s.id !== section.id);
+  wrapper.remove();
+  salvarEstado();
+  showToast("Seção excluída.");
+}
+
 function renderizarSecao(section) {
   const container = document.getElementById("main-sections-container");
 
@@ -261,7 +319,7 @@ function renderizarSecao(section) {
         <button class="arrow${section.collapsed ? " collapsed" : ""}" title="Expandir / Recolher">▼</button>
         <h3 class="section-title-text">${escapeHTML(section.title)}</h3>
       </div>
-      <div class="section-header-right" title="Opções">•••</div>
+      <div class="section-header-right section-options-btn" title="Excluir seção">✕</div>
     </div>
     <div class="tasks-list-container" id="tasks-${section.id}"></div>
     <a class="add-taks add-task-section-btn"><span>+</span> Adicionar tarefa</a>
@@ -283,64 +341,66 @@ function renderizarSecao(section) {
 
   container.appendChild(wrapper);
 
-  const lista       = wrapper.querySelector(`#tasks-${section.id}`);
-  const arrow       = wrapper.querySelector(".arrow");
+  const lista = wrapper.querySelector(`#tasks-${section.id}`);
+  const arrow = wrapper.querySelector(".arrow");
   const addTaskLink = wrapper.querySelector(".add-task-section-btn");
-  const card        = wrapper.querySelector(".section-card");
-  const titleInput  = wrapper.querySelector(".sec-title-input");
-  const descInput   = wrapper.querySelector(".sec-desc-input");
-  const addBtn      = wrapper.querySelector(".sec-add-btn");
-  const cancelBtn   = wrapper.querySelector(".sec-cancel-btn");
+  const card = wrapper.querySelector(".section-card");
+  const titleInput = wrapper.querySelector(".sec-title-input");
+  const descInput = wrapper.querySelector(".sec-desc-input");
+  const addBtn = wrapper.querySelector(".sec-add-btn");
+  const cancelBtn = wrapper.querySelector(".sec-cancel-btn");
 
-  // Restaurar estado de colapso
+  // FIX: bind direto, sem onclick inline no HTML
+  wrapper.querySelector(".section-options-btn").addEventListener("click", () => {
+    if (confirm(`Excluir a seção "${section.title}" e todas as suas tarefas?`)) {
+      excluirSecao(section, wrapper);
+    }
+  });
+
   if (section.collapsed) {
-    lista.style.display       = "none";
+    lista.style.display = "none";
     addTaskLink.style.display = "none";
   }
 
-  // Restaurar tarefas salvas desta seção
+  // Restaurar tarefas respeitando a ordem salva
   state.tasks
     .filter(t => t.sectionId === section.id)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .forEach(t => lista.appendChild(criarTaskEl(t)));
 
-  // Toggle colapso
   arrow.addEventListener("click", () => {
     section.collapsed = !section.collapsed;
     arrow.classList.toggle("collapsed", section.collapsed);
-    lista.style.display       = section.collapsed ? "none" : "";
+    lista.style.display = section.collapsed ? "none" : "";
     addTaskLink.style.display = section.collapsed ? "none" : "flex";
     if (section.collapsed) card.style.display = "none";
     salvarEstado();
   });
 
-  // Abrir card de nova tarefa
   addTaskLink.addEventListener("click", () => {
     card.style.display = "flex";
     addTaskLink.style.display = "none";
     titleInput.focus();
   });
 
-  // Cancelar
   cancelBtn.addEventListener("click", () => {
-    card.style.display        = "none";
+    card.style.display = "none";
     addTaskLink.style.display = "flex";
     titleInput.value = "";
-    descInput.value  = "";
-    bindAddButton(titleInput, addBtn); // reset visual
+    descInput.value = "";
+    bindAddButton(titleInput, addBtn);
   });
 
-  // Ativar botão ao digitar
   bindAddButton(titleInput, addBtn);
   titleInput.addEventListener("input", () => autoResize(titleInput));
-  descInput.addEventListener("input",  () => autoResize(descInput));
+  descInput.addEventListener("input", () => autoResize(descInput));
 
-  // Adicionar tarefa na seção
   addBtn.addEventListener("click", () => {
     const titulo = titleInput.value.trim();
-    const desc   = descInput.value.trim();
+    const desc = descInput.value.trim();
     if (!titulo) return;
 
-    const task = { id: gerarId(), title: titulo, desc, done: false, sectionId: section.id };
+    const task = { id: gerarId(), title: titulo, desc, done: false, sectionId: section.id, order: state.tasks.length };
     state.tasks.push(task);
     salvarEstado();
 
@@ -348,24 +408,22 @@ function renderizarSecao(section) {
     registrarContainersDroppable();
 
     titleInput.value = "";
-    descInput.value  = "";
-    card.style.display        = "none";
+    descInput.value = "";
+    card.style.display = "none";
     addTaskLink.style.display = "flex";
     showToast("Tarefa adicionada!");
   });
 
-  // Registrar lista como droppable
   registrarContainersDroppable();
 }
 
 // =============================================================================
-// DRAG AND DROP — implementação única e centralizada
+// DRAG AND DROP
 // =============================================================================
 const dragState = { item: null };
 
 function registrarContainersDroppable() {
   document.querySelectorAll("#lista-tarefas, .tasks-list-container").forEach(container => {
-    // Evita registrar duas vezes usando data attribute
     if (container.dataset.dropRegistered) return;
     container.dataset.dropRegistered = "true";
 
@@ -382,7 +440,7 @@ function registrarContainersDroppable() {
 function getDragAfterElement(container, y) {
   const els = [...container.querySelectorAll(".task:not(.dragging)")];
   return els.reduce((closest, child) => {
-    const box    = child.getBoundingClientRect();
+    const box = child.getBoundingClientRect();
     const offset = y - box.top - box.height / 2;
     return offset < 0 && offset > closest.offset
       ? { offset, element: child }
@@ -401,12 +459,11 @@ document.getElementById("toggleSidebarBtn")?.addEventListener("click", () => {
   document.getElementById("sidebar").classList.remove("open");
 });
 
-// Fechar sidebar ao clicar fora (mobile)
 document.addEventListener("click", e => {
   const sidebar = document.getElementById("sidebar");
   const openBtn = document.getElementById("openSidebarBtn");
   if (
-    sidebar.classList.contains("open") &&
+    sidebar?.classList.contains("open") &&
     !sidebar.contains(e.target) &&
     e.target !== openBtn
   ) {
@@ -420,9 +477,11 @@ document.addEventListener("click", e => {
 function setarDataHoje() {
   const el = document.getElementById("todayDate");
   if (!el) return;
-  el.textContent = new Date().toLocaleDateString("pt-BR", {
+  // FIX: capitaliza a primeira letra (pt-BR retorna tudo em minúsculas)
+  const data = new Date().toLocaleDateString("pt-BR", {
     weekday: "long", day: "numeric", month: "long",
   });
+  el.textContent = data.charAt(0).toUpperCase() + data.slice(1);
 }
 
 // =============================================================================
@@ -431,48 +490,39 @@ function setarDataHoje() {
 window.addEventListener("load", () => {
   carregarEstado();
 
-  // Auto-resize nos textareas do form principal
   document.querySelectorAll(".task-input").forEach(el => {
     el.addEventListener("input", () => autoResize(el));
   });
 
-  // Ativar botão principal
+  // FIX: removida a linha que sobrescrevia o ID do botão
   const titleMain = document.getElementById("title");
-  const addMain   = document.querySelector("#cardTaksEdi .add");
-  if (titleMain && addMain) {
-    addMain.id = "mainAddBtn"; // garante ID
-    bindAddButton(titleMain, addMain);
-  }
+  const addMain = document.querySelector("#cardTaksEdi .add");
+  if (titleMain && addMain) bindAddButton(titleMain, addMain);
 
-  // Ativar botão de seção
-  const secTitleInput = document.getElementById("sectionTitle");
-  const secAddBtn     = document.querySelector(".add-section-btn");
-  if (secTitleInput && secAddBtn) bindAddButton(secTitleInput, secAddBtn);
-
-  // Renderizar tarefas salvas na lista principal
   const listaPrincipal = document.getElementById("lista-tarefas");
-  // Limpa o item de exemplo estático do HTML
   listaPrincipal.innerHTML = "";
   state.tasks
     .filter(t => t.sectionId === null)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
     .forEach(t => listaPrincipal.appendChild(criarTaskEl(t)));
 
-  // Renderizar seções salvas
-  // Limpa seção de exemplo estática do HTML
   document.getElementById("main-sections-container").innerHTML = `
     <div class="add-name-task">
       <input type="text" class="add-name-input" id="sectionTitle" placeholder="Nomear esta seção">
       <div class="group-bottom-add-section">
-        <button class="add-section-btn" onclick="addSectionS()">Adicionar seção</button>
-        <button class="cancel-section-btn" onclick="cancelSection()">Cancelar</button>
+        <button class="add-section-btn">Adicionar seção</button>
+        <button class="cancel-section-btn">Cancelar</button>
       </div>
     </div>
   `;
 
-  // Re-bind após recriar o HTML
-  const secTitleInput2 = document.getElementById("sectionTitle");
-  const secAddBtn2     = document.querySelector(".add-section-btn");
-  if (secTitleInput2 && secAddBtn2) bindAddButton(secTitleInput2, secAddBtn2);
+  // FIX: bind direto, sem onclick inline
+  document.querySelector(".add-section-btn").addEventListener("click", addSectionS);
+  document.querySelector(".cancel-section-btn").addEventListener("click", cancelSection);
+
+  const secTitleInput = document.getElementById("sectionTitle");
+  const secAddBtn = document.querySelector(".add-section-btn");
+  if (secTitleInput && secAddBtn) bindAddButton(secTitleInput, secAddBtn);
 
   state.sections.forEach(renderizarSecao);
 
